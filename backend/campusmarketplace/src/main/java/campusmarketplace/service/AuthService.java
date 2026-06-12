@@ -1,6 +1,7 @@
 package campusmarketplace.service;
 
 import campusmarketplace.dto.RegisterRequest;
+import campusmarketplace.dto.LoginRequest;
 import campusmarketplace.entity.User;
 import campusmarketplace.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,20 @@ public class AuthService {
         userRepository.save(user);
 
         return "User registered successfully";
+    }
+
+    public String login(LoginRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail());
+
+        if (user == null) {
+            return "User not found";
+        }
+
+        if (!user.getPassword().equals(request.getPassword())) {
+            return "Invalid password";
+        }
+
+        return "Login successful";
     }
 }
