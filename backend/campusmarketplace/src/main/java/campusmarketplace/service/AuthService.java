@@ -1,7 +1,8 @@
 package campusmarketplace.service;
 
-import campusmarketplace.dto.RegisterRequest;
+import campusmarketplace.dto.LoginResponse;
 import campusmarketplace.dto.LoginRequest;
+import campusmarketplace.dto.RegisterRequest;
 import campusmarketplace.entity.User;
 import campusmarketplace.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -11,8 +12,11 @@ public class AuthService {
 
     private final UserRepository userRepository;
 
-    public AuthService(UserRepository userRepository) {
+    private final JwtService jwtService;
+
+    public AuthService(UserRepository userRepository, JwtService jwtService) {
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
 
     public String register(RegisterRequest request) {
@@ -33,18 +37,17 @@ public class AuthService {
         return "User registered successfully";
     }
 
-    public String login(LoginRequest request) {
-
+    public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail());
-
         if (user == null) {
-            return "User not found";
+            return new LoginResponse("User not found", null);
         }
-
         if (!user.getPassword().equals(request.getPassword())) {
-            return "Invalid password";
+            return new LoginResponse("Invalid password", null);
         }
-
-        return "Login successful";
+        String token = jwtService.generateToken(user.getEmail());
+        return new LoginResponse(
+                "Login successful",
+                token);
     }
 }

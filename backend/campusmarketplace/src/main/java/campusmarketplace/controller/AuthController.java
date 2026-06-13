@@ -4,6 +4,7 @@ import campusmarketplace.dto.LoginRequest;
 import campusmarketplace.dto.RegisterRequest;
 import campusmarketplace.service.AuthService;
 import org.springframework.web.bind.annotation.*;
+import campusmarketplace.dto.LoginResponse;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,7 +23,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
+    public LoginResponse login(
+            @RequestBody LoginRequest request) {
         return authService.login(request);
     }
 }
