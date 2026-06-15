@@ -3,7 +3,8 @@ package campusmarketplace.service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
@@ -24,5 +25,28 @@ public class JwtService {
                                 + 1000 * 60 * 60))
                 .signWith(key)
                 .compact();
+    }
+
+    public String extractEmail(String token) {
+
+        Jws<Claims> claims = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token);
+
+        return claims
+                .getPayload()
+                .getSubject();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            System.out.println("TOKEN = " + token);
+            extractEmail(token);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
