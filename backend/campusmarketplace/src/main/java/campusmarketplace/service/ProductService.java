@@ -78,4 +78,32 @@ public class ProductService {
 
         return "Product deleted successfully";
     }
+
+    public List<Product> searchProducts(
+            String title) {
+
+        return productRepository
+                .findByTitleContainingIgnoreCase(
+                        title);
+    }
+
+    public List<Product> getSellerProducts(
+            String email) {
+
+        return productRepository
+                .findBySellerEmail(email);
+    }
+
+    public List<Product> getProductsLowToHigh() {
+
+        return productRepository
+                .findAllByOrderByPriceAsc();
+    }
+
+    public List<Product> getProductsHighToLow() {
+
+        return productRepository
+                .findAllByOrderByPriceDesc();
+    }
+
 }

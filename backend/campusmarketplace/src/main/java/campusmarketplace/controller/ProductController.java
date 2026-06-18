@@ -55,4 +55,32 @@ public class ProductController {
         return productService
                 .deleteProduct(id);
     }
+
+    @GetMapping("/search")
+    public List<Product> searchProducts(
+            @RequestParam String title) {
+
+        return productService
+                .searchProducts(title);
+    }
+
+    @GetMapping("/seller")
+    public List<Product> sellerProducts(
+            @RequestParam String email) {
+
+        return productService
+                .getSellerProducts(email);
+    }
+
+    @GetMapping("/price/low")
+    public List<Product> lowToHigh() {
+        return productService
+                .getProductsLowToHigh();
+    }
+
+    @GetMapping("/price/high")
+    public List<Product> highToLow() {
+        return productService
+                .getProductsHighToLow();
+    }
 }
