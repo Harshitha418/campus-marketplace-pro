@@ -21,4 +21,6 @@ public class Product {
     private Double price;
 
     private String sellerEmail;
+
+    private String category;
 }

@@ -6,6 +6,7 @@ public class CreateProductRequest {
     private String description;
     private Double price;
     private String sellerEmail;
+    private String category;
 
     public String getTitle() {
         return title;
@@ -37,5 +38,13 @@ public class CreateProductRequest {
 
     public void setSellerEmail(String sellerEmail) {
         this.sellerEmail = sellerEmail;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

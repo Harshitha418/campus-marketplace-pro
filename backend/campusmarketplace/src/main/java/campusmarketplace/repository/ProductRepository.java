@@ -16,4 +16,8 @@ public interface ProductRepository
         List<Product> findAllByOrderByPriceAsc();
 
         List<Product> findAllByOrderByPriceDesc();
+
+        List<Product> findByCategoryIgnoreCase(
+                        String category);
+
 }

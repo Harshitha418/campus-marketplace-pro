@@ -30,6 +30,8 @@ public class ProductService {
         product.setSellerEmail(
                 request.getSellerEmail());
 
+        product.setCategory(request.getCategory());
+
         productRepository.save(product);
 
         return "Product created successfully";
@@ -104,6 +106,13 @@ public class ProductService {
 
         return productRepository
                 .findAllByOrderByPriceDesc();
+    }
+
+    public List<Product> getProductsByCategory(
+            String category) {
+
+        return productRepository
+                .findByCategoryIgnoreCase(category);
     }
 
 }

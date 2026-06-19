@@ -83,4 +83,13 @@ public class ProductController {
         return productService
                 .getProductsHighToLow();
     }
+
+    @GetMapping("/category/{category}")
+    public List<Product> getProductsByCategory(
+            @PathVariable String category) {
+
+        return productService
+                .getProductsByCategory(
+                        category);
+    }
 }
