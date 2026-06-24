@@ -6,113 +6,119 @@ import campusmarketplace.dto.UpdateProductRequest;
 import campusmarketplace.entity.Product;
 import campusmarketplace.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 
 @Service
 public class ProductService {
 
-    private final ProductRepository productRepository;
+        private final ProductRepository productRepository;
 
-    public ProductService(
-            ProductRepository productRepository) {
+        public ProductService(
+                        ProductRepository productRepository) {
 
-        this.productRepository = productRepository;
-    }
-
-    public String createProduct(
-            CreateProductRequest request) {
-
-        Product product = new Product();
-
-        product.setTitle(request.getTitle());
-        product.setDescription(
-                request.getDescription());
-        product.setPrice(request.getPrice());
-        product.setSellerEmail(
-                request.getSellerEmail());
-
-        product.setCategory(request.getCategory());
-
-        productRepository.save(product);
-
-        return "Product created successfully";
-    }
-
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
-
-    public Product getProduct(Long id) {
-        return productRepository.findById(id)
-                .orElse(null);
-    }
-
-    public String updateProduct(
-            Long id,
-            UpdateProductRequest request) {
-
-        Product product = productRepository.findById(id)
-                .orElse(null);
-
-        if (product == null) {
-            return "Product not found";
+                this.productRepository = productRepository;
         }
 
-        product.setTitle(request.getTitle());
-        product.setDescription(
-                request.getDescription());
-        product.setPrice(request.getPrice());
+        @CacheEvict("products")
+        public String createProduct(
+                        CreateProductRequest request) {
 
-        productRepository.save(product);
+                Product product = new Product();
 
-        return "Product updated successfully";
-    }
+                product.setTitle(request.getTitle());
+                product.setDescription(
+                                request.getDescription());
+                product.setPrice(request.getPrice());
+                product.setSellerEmail(
+                                request.getSellerEmail());
 
-    public String deleteProduct(Long id) {
+                product.setCategory(request.getCategory());
 
-        Product product = productRepository.findById(id)
-                .orElse(null);
+                productRepository.save(product);
 
-        if (product == null) {
-            return "Product not found";
+                return "Product created successfully";
         }
 
-        productRepository.delete(product);
+        @Cacheable("products")
+        public List<Product> getAllProducts() {
+                return productRepository.findAll();
+        }
 
-        return "Product deleted successfully";
-    }
+        public Product getProduct(Long id) {
+                return productRepository.findById(id)
+                                .orElse(null);
+        }
 
-    public List<Product> searchProducts(
-            String title) {
+        @CacheEvict(value = "products", allEntries = true)
+        public String updateProduct(
+                        Long id,
+                        UpdateProductRequest request) {
 
-        return productRepository
-                .findByTitleContainingIgnoreCase(
-                        title);
-    }
+                Product product = productRepository.findById(id)
+                                .orElse(null);
 
-    public List<Product> getSellerProducts(
-            String email) {
+                if (product == null) {
+                        return "Product not found";
+                }
 
-        return productRepository
-                .findBySellerEmail(email);
-    }
+                product.setTitle(request.getTitle());
+                product.setDescription(
+                                request.getDescription());
+                product.setPrice(request.getPrice());
 
-    public List<Product> getProductsLowToHigh() {
+                productRepository.save(product);
 
-        return productRepository
-                .findAllByOrderByPriceAsc();
-    }
+                return "Product updated successfully";
+        }
 
-    public List<Product> getProductsHighToLow() {
+        @CacheEvict(value = "products", allEntries = true)
+        public String deleteProduct(Long id) {
 
-        return productRepository
-                .findAllByOrderByPriceDesc();
-    }
+                Product product = productRepository.findById(id)
+                                .orElse(null);
 
-    public List<Product> getProductsByCategory(
-            String category) {
+                if (product == null) {
+                        return "Product not found";
+                }
 
-        return productRepository
-                .findByCategoryIgnoreCase(category);
-    }
+                productRepository.delete(product);
+
+                return "Product deleted successfully";
+        }
+
+        public List<Product> searchProducts(
+                        String title) {
+
+                return productRepository
+                                .findByTitleContainingIgnoreCase(
+                                                title);
+        }
+
+        public List<Product> getSellerProducts(
+                        String email) {
+
+                return productRepository
+                                .findBySellerEmail(email);
+        }
+
+        public List<Product> getProductsLowToHigh() {
+
+                return productRepository
+                                .findAllByOrderByPriceAsc();
+        }
+
+        public List<Product> getProductsHighToLow() {
+
+                return productRepository
+                                .findAllByOrderByPriceDesc();
+        }
+
+        public List<Product> getProductsByCategory(
+                        String category) {
+
+                return productRepository
+                                .findByCategoryIgnoreCase(category);
+        }
 
 }
