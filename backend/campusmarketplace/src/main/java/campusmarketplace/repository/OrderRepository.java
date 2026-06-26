@@ -11,4 +11,5 @@ public interface OrderRepository
         List<OrderEntity> findByUserEmail(
                         String userEmail);
 
+        long count();
 }

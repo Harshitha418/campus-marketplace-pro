@@ -6,6 +6,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "products")
 @Getter
 @Setter
 public class Product implements Serializable {
