@@ -14,4 +14,10 @@ public class AdminDashboardResponse {
     private Long totalOrders;
 
     private Long totalReviews;
+
+    private Double totalRevenue;
+
+    private Double averageRating;
+
+    private Integer totalQuantitySold;
 }

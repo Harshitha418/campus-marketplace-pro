@@ -36,6 +36,15 @@ public class AdminService {
         response.setTotalOrders(orderRepository.count());
         response.setTotalReviews(reviewRepository.count());
 
+        response.setTotalRevenue(
+                orderRepository.getTotalRevenue());
+
+        response.setAverageRating(
+                reviewRepository.getAverageRating());
+
+        response.setTotalQuantitySold(
+                orderRepository.getTotalQuantitySold());
+
         return response;
     }
 }
