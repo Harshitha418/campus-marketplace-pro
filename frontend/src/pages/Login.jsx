@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
-import { saveToken } from "../services/auth";
+import { saveLogin } from "../services/auth";
 
 function Login() {
 
@@ -26,7 +26,7 @@ function Login() {
 
             });
 
-            saveToken(response.data.token);
+            saveLogin(response.data.token, email);
 
             setMessage("Login Successful!");
 
