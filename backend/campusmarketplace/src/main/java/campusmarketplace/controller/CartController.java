@@ -1,9 +1,8 @@
 package campusmarketplace.controller;
 
-import campusmarketplace.entity.Cart;
 import campusmarketplace.service.CartService;
 import org.springframework.web.bind.annotation.*;
-
+import campusmarketplace.dto.CartResponse;
 import java.util.List;
 
 @RestController
@@ -28,7 +27,7 @@ public class CartController {
     }
 
     @GetMapping
-    public List<Cart> getCart(
+    public List<CartResponse> getCart(
             @RequestParam String email) {
 
         return cartService

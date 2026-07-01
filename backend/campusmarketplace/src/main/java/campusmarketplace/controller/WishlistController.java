@@ -1,9 +1,8 @@
 package campusmarketplace.controller;
 
-import campusmarketplace.entity.Wishlist;
 import campusmarketplace.service.WishlistService;
 import org.springframework.web.bind.annotation.*;
-
+import campusmarketplace.dto.WishlistResponse;
 import java.util.List;
 
 @RestController
@@ -28,7 +27,7 @@ public class WishlistController {
     }
 
     @GetMapping
-    public List<Wishlist> getWishlist(
+    public List<WishlistResponse> getWishlist(
             @RequestParam String email) {
 
         return wishlistService
