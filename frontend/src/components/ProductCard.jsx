@@ -1,9 +1,10 @@
 import { FaHeart, FaShoppingCart, FaEye, FaTag } from "react-icons/fa";
 import api from "../services/api";
 import { getEmail } from "../services/auth";
-
+import { useNavigate } from "react-router-dom";
 function ProductCard({ product }) {
 
+    const navigate = useNavigate();
     const addToWishlist = async () => {
 
         try {
@@ -110,6 +111,7 @@ function ProductCard({ product }) {
 
                     <button
                         className="btn btn-dark w-100"
+                        onClick={() => navigate(`/product/${product.id}`)}
                     >
                         <FaEye /> View Details
                     </button>

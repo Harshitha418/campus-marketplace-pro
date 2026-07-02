@@ -1,9 +1,8 @@
 package campusmarketplace.controller;
 
-import campusmarketplace.entity.OrderEntity;
 import campusmarketplace.service.OrderService;
 import org.springframework.web.bind.annotation.*;
-
+import campusmarketplace.dto.OrderResponse;
 import java.util.List;
 
 @RestController
@@ -31,7 +30,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderEntity> getOrders(
+    public List<OrderResponse> getOrders(
             @RequestParam String email) {
 
         return orderService.getOrders(
