@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import { getEmail } from "../services/auth";
+import { FaTrash, FaTag } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import LoadingSpinner from "../components/LoadingSpinner";
+import EmptyState from "../components/EmptyState";
+import ProductImage from "../components/ProductImage";
 
 function Cart() {
 
     const [cartItems, setCartItems] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-
         loadCart();
-
     }, []);
 
     const loadCart = async () => {
+
+        setLoading(true);
 
         try {
 
@@ -30,7 +37,11 @@ function Cart() {
         } catch (error) {
 
             console.log(error);
-            alert("Failed to load cart");
+            toast.error("Failed to load cart");
+
+        } finally {
+
+            setLoading(false);
 
         }
 
@@ -42,12 +53,14 @@ function Cart() {
 
             await api.delete(`/cart/${id}`);
 
+            toast.success("Item removed");
+
             loadCart();
 
         } catch (error) {
 
             console.log(error);
-            alert("Failed to remove item");
+            toast.error("Failed to remove item");
 
         }
 
@@ -58,11 +71,23 @@ function Cart() {
         0
     );
 
+    if (loading) {
+
     return (
 
-        <div className="container mt-5">
+        <LoadingSpinner
+            message="Loading your cart..."
+        />
 
-            <h2 className="mb-4">
+    );
+
+}
+
+    return (
+
+        <div className="container py-5">
+
+            <h2 className="fw-bold mb-4">
 
                 🛒 My Cart
 
@@ -72,11 +97,19 @@ function Cart() {
 
                 cartItems.length === 0 ?
 
-                    <div className="alert alert-info">
+                    <EmptyState
 
-                        Cart is empty.
+    icon="🛒"
 
-                    </div>
+    title="Your cart is empty"
+
+    message="Browse products and add something!"
+
+    buttonText="Continue Shopping"
+
+    buttonLink="/"
+
+/>
 
                     :
 
@@ -88,65 +121,91 @@ function Cart() {
 
                                 <div
                                     key={item.id}
-                                    className="card shadow mb-3"
+                                    className="card shadow border-0 rounded-4 mb-4"
                                 >
 
                                     <div className="card-body">
 
-                                        <h4>
+                                        <div className="row align-items-center">
 
-                                            📦 {item.title}
+                                            <div className="col-md-2 text-center">
 
-                                        </h4>
+                                                <ProductImage
+                                                    title={item.title}
+                                                />
 
-                                        <p>
+                                            </div>
 
-                                            {item.description}
+                                            <div className="col-md-7">
 
-                                        </p>
+                                                <h4 className="fw-bold">
 
-                                        <span className="badge bg-primary">
+                                                    {item.title}
 
-                                            {item.category}
+                                                </h4>
 
-                                        </span>
+                                                <p className="text-muted">
 
-                                        <h5 className="mt-3 text-success">
+                                                    {item.description}
 
-                                            ₹ {item.price}
+                                                </p>
 
-                                        </h5>
+                                                <span className="badge bg-primary rounded-pill">
 
-                                        <h6>
+                                                    <FaTag className="me-2" />
 
-                                            Quantity :
+                                                    {item.category}
 
-                                            {" "}
+                                                </span>
 
-                                            {item.quantity}
+                                            </div>
 
-                                        </h6>
+                                            <div className="col-md-3 text-end">
 
-                                        <h6>
+                                                <h4 className="text-success fw-bold">
 
-                                            Subtotal :
+                                                    ₹ {item.price}
 
-                                            {" "}
+                                                </h4>
 
-                                            ₹ {item.price * item.quantity}
+                                                <p>
 
-                                        </h6>
+                                                    Quantity
 
-                                        <button
-                                            className="btn btn-danger mt-3"
-                                            onClick={() =>
-                                                removeItem(item.id)
-                                            }
-                                        >
+                                                    <span className="badge bg-dark ms-2">
 
-                                            Remove
+                                                        {item.quantity}
 
-                                        </button>
+                                                    </span>
+
+                                                </p>
+
+                                                <h6 className="text-muted">
+
+                                                    Subtotal
+
+                                                </h6>
+
+                                                <h5 className="fw-bold">
+
+                                                    ₹ {item.price * item.quantity}
+
+                                                </h5>
+
+                                                <button
+                                                    className="btn btn-outline-danger rounded-pill mt-2"
+                                                    onClick={() => removeItem(item.id)}
+                                                >
+
+                                                    <FaTrash className="me-2" />
+
+                                                    Remove
+
+                                                </button>
+
+                                            </div>
+
+                                        </div>
 
                                     </div>
 
@@ -156,21 +215,31 @@ function Cart() {
 
                         }
 
-                        <div className="card shadow p-4 mt-4">
+                        <div className="card border-0 shadow rounded-4">
 
-                            <h3>
+                            <div className="card-body text-center p-4">
 
-                                Total : ₹ {total}
+                                <h5 className="text-muted">
 
-                            </h3>
+                                    Total Amount
 
-                            <button
-                                className="btn btn-success btn-lg mt-3"
-                            >
+                                </h5>
 
-                                Proceed to Checkout
+                                <h2 className="text-success fw-bold">
 
-                            </button>
+                                    ₹ {total}
+
+                                </h2>
+
+                                <button
+                                    className="btn btn-success btn-lg rounded-pill px-5 mt-3"
+                                >
+
+                                    Proceed to Checkout
+
+                                </button>
+
+                            </div>
 
                         </div>
 

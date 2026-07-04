@@ -31,13 +31,13 @@ function Register() {
                 form
             );
 
-            alert(response.data);
+            toast.success(response.data);
 
             navigate("/login");
 
         } catch (err) {
 
-            alert("Registration Failed");
+            toast.error("Registration Failed");
 
         }
 

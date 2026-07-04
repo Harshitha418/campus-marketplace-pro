@@ -1,10 +1,11 @@
-import { FaHeart, FaShoppingCart, FaEye, FaTag } from "react-icons/fa";
+import { FaHeart, FaShoppingCart } from "react-icons/fa";
 import api from "../services/api";
 import { getEmail } from "../services/auth";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import ProductImage from "./ProductImage";
+
 function ProductCard({ product }) {
 
-    const navigate = useNavigate();
     const addToWishlist = async () => {
 
         try {
@@ -16,18 +17,17 @@ function ProductCard({ product }) {
                 null,
                 {
                     params: {
-                        email: email
+                        email
                     }
                 }
             );
 
-            alert("❤️ Added to Wishlist!");
+            toast.success("❤️ Added to Wishlist!");
 
         } catch (error) {
 
             console.log(error);
-
-            alert("Failed to add to Wishlist");
+            toast.error("Failed to add to Wishlist");
 
         }
 
@@ -44,18 +44,17 @@ function ProductCard({ product }) {
                 null,
                 {
                     params: {
-                        email: email
+                        email
                     }
                 }
             );
 
-            alert("🛒 Added to Cart!");
+            toast.success("🛒 Added to Cart!");
 
         } catch (error) {
 
             console.log(error);
-
-            alert("Failed to add to Cart");
+            toast.error("Failed to add to Cart");
 
         }
 
@@ -63,57 +62,51 @@ function ProductCard({ product }) {
 
     return (
 
-        <div className="card shadow-lg border-0 h-100 rounded-4">
+        <div className="card shadow border-0 rounded-4 h-100">
 
-            <div className="card-body d-flex flex-column">
+            <div className="card-body text-center d-flex flex-column">
 
-                <div
-                    className="text-center mb-3"
-                    style={{ fontSize: "60px" }}
+                <ProductImage title={product.title} />
+                
+                <Link
+                    to={`/product/${product.id}`}
+                    className="text-decoration-none text-dark"
                 >
-                    📦
-                </div>
 
-                <h5 className="fw-bold">
-                    {product.title}
-                </h5>
+                    <h4 className="fw-bold">
 
-                <p
-                    className="text-muted"
-                    style={{ minHeight: "60px" }}
+                        {product.title}
+
+                    </h4>
+
+                </Link>
+
+                <h3
+                    className="text-success fw-bold my-4"
                 >
-                    {product.description}
-                </p>
 
-                <h4 className="text-success fw-bold">
                     ₹ {product.price}
-                </h4>
 
-                <span className="badge bg-primary mb-3">
-                    <FaTag /> {product.category}
-                </span>
+                </h3>
 
                 <div className="mt-auto">
 
                     <button
-                        className="btn btn-outline-danger w-100 mb-2"
+                        className="btn btn-outline-danger w-100 mb-2 rounded-pill"
                         onClick={addToWishlist}
                     >
+
                         <FaHeart /> Wishlist
+
                     </button>
 
                     <button
-                        className="btn btn-success w-100 mb-2"
+                        className="btn btn-success w-100 rounded-pill"
                         onClick={addToCart}
                     >
-                        <FaShoppingCart /> Add to Cart
-                    </button>
 
-                    <button
-                        className="btn btn-dark w-100"
-                        onClick={() => navigate(`/product/${product.id}`)}
-                    >
-                        <FaEye /> View Details
+                        <FaShoppingCart /> Add to Cart
+
                     </button>
 
                 </div>

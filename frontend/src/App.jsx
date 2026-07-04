@@ -13,24 +13,37 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
 function App() {
-  return (
-    <>
-      <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-      </Routes>
+    return (
 
-      <Footer />
-    </>
-  );
+        <div
+            className="d-flex flex-column"
+            style={{ minHeight: "100vh" }}
+        >
+
+            <Navbar />
+
+            <main className="flex-grow-1">
+
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/product/:id" element={<ProductDetails />} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/wishlist" element={<Wishlist />} />
+                    <Route path="/orders" element={<Orders />} />
+                    <Route path="/admin" element={<AdminDashboard />} />
+                </Routes>
+
+            </main>
+
+            <Footer />
+
+        </div>
+
+    );
+
 }
 
 export default App;

@@ -1,9 +1,21 @@
 function Footer() {
+
     return (
-        <footer className="text-center mt-5 p-3 bg-light">
-            © 2026 Campus Marketplace Pro
+
+        <footer
+            className="border-top bg-white text-center py-3"
+        >
+
+            <small className="text-muted">
+
+                © 2026 Campus Marketplace Pro
+
+            </small>
+
         </footer>
+
     );
+
 }
 
 export default Footer;

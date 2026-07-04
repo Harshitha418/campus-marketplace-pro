@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api";
+import { FaHeart, FaShoppingCart, FaTag } from "react-icons/fa";
+import { getEmail } from "../services/auth";
 
 function ProductDetails() {
 
@@ -16,86 +18,200 @@ function ProductDetails() {
 
     const loadProduct = async () => {
 
-        try {
+        const response = await api.get(`/products/${id}`);
 
-            const response = await api.get(`/products/${id}`);
+        setProduct(response.data);
 
-            setProduct(response.data);
+    };
 
-        } catch (error) {
+    const addToWishlist = async () => {
 
-            console.log(error);
+        const email = getEmail();
 
-            alert("Failed to load product");
+        await api.post(
 
-        }
+            `/wishlist/${product.id}`,
+
+            null,
+
+            {
+
+                params: {
+
+                    email
+
+                }
+
+            }
+
+        );
+
+        toast.success("❤️ Added to Wishlist!");
+
+    };
+
+    const addToCart = async () => {
+
+        const email = getEmail();
+
+        await api.post(
+
+            `/cart/${product.id}`,
+
+            null,
+
+            {
+
+                params: {
+
+                    email
+
+                }
+
+            }
+
+        );
+
+        toast.success("🛒 Added to Cart!");
 
     };
 
     if (!product) {
 
-        return (
-            <div className="container mt-5">
+    return (
+
+        <div
+            className="d-flex flex-column justify-content-center align-items-center"
+            style={{ height: "60vh" }}
+        >
+
+            <div
+                className="spinner-border text-primary mb-3"
+                role="status"
+            >
+
+                <span className="visually-hidden">
+
+                    Loading...
+
+                </span>
+
+            </div>
+
+            <h5 className="text-muted">
 
                 Loading...
 
-            </div>
-        );
+            </h5>
 
-    }
+        </div>
 
-    return (
+    );
 
-        <div className="container mt-5">
+}
 
-            <div className="card shadow-lg">
+return (
 
-                <div className="card-body">
+    <div className="container py-5">
 
-                    <div
-                        className="text-center mb-4"
-                        style={{ fontSize: "80px" }}
-                    >
+        <div className="card border-0 shadow-lg rounded-4">
 
-                        📦
+            <div className="row align-items-center">
+
+                <div className="col-lg-5 text-center p-5 border-end">
+
+                    <img
+                        src="https://placehold.co/250x250?text=Product"
+                        className="img-fluid rounded"
+                    />
+
+                    <p className="text-muted mt-3">
+
+                        Product Preview
+
+                    </p>
+
+                </div>
+
+                <div className="col-lg-7">
+
+                    <div className="card-body p-5">
+
+                        <span className="badge bg-primary rounded-pill px-3 py-2">
+
+                            <FaTag className="me-2" />
+
+                            {product.category}
+
+                        </span>
+
+                        <h1 className="fw-bold mt-3">
+
+                            {product.title}
+
+                        </h1>
+
+                        <h2 className="text-success fw-bold my-4">
+
+                            ₹ {product.price}
+
+                        </h2>
+
+                        <hr />
+
+                        <h5 className="fw-semibold">
+
+                            Description
+
+                        </h5>
+
+                        <p className="text-muted">
+
+                            {product.description}
+
+                        </p>
+
+                        <hr />
+
+                        <h5 className="fw-semibold">
+
+                            Seller
+
+                        </h5>
+
+                        <p>
+
+                            {product.sellerEmail}
+
+                        </p>
+
+                        <div className="d-flex gap-3 mt-4">
+
+                            <button
+                                className="btn btn-outline-danger rounded-pill px-4"
+                                onClick={addToWishlist}
+                            >
+
+                                <FaHeart className="me-2" />
+
+                                Wishlist
+
+                            </button>
+
+                            <button
+                                className="btn btn-success rounded-pill px-4"
+                                onClick={addToCart}
+                            >
+
+                                <FaShoppingCart className="me-2" />
+
+                                Add to Cart
+
+                            </button>
+
+                        </div>
 
                     </div>
-
-                    <h2>
-
-                        {product.title}
-
-                    </h2>
-
-                    <p>
-
-                        {product.description}
-
-                    </p>
-
-                    <span className="badge bg-primary">
-
-                        {product.category}
-
-                    </span>
-
-                    <h3 className="text-success mt-3">
-
-                        ₹ {product.price}
-
-                    </h3>
-
-                    <h5 className="mt-3">
-
-                        Seller
-
-                    </h5>
-
-                    <p>
-
-                        {product.sellerEmail}
-
-                    </p>
 
                 </div>
 
@@ -103,7 +219,9 @@ function ProductDetails() {
 
         </div>
 
-    );
+    </div>
+
+);
 
 }
 

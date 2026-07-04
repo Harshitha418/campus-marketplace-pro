@@ -1,5 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import { isLoggedIn, logout } from "../services/auth";
+import { isLoggedIn, logout, getEmail } from "../services/auth";
+import {
+    FaShoppingCart,
+    FaHeart,
+    FaClipboardList,
+    FaSignOutAlt,
+    FaUserCircle
+} from "react-icons/fa";
 
 function Navbar() {
 
@@ -8,88 +15,91 @@ function Navbar() {
     const handleLogout = () => {
 
         logout();
-
         navigate("/login");
 
     };
 
     return (
 
-        <nav className="navbar navbar-dark bg-dark px-4">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
 
-            <Link
-                className="navbar-brand"
-                to="/">
+            <div className="container">
 
-                Campus Marketplace
+                <Link
+                    className="navbar-brand fw-bold fs-3"
+                    to="/"
+                >
+                    🛍 Campus Marketplace
+                </Link>
 
-            </Link>
+                {
 
-            {
+                    isLoggedIn()
 
-                isLoggedIn()
+                        ?
 
-                    ?
+                        <div className="d-flex align-items-center">
 
-                    <div>
+                            <span
+                                className="text-white me-4 d-none d-md-block"
+                            >
+                                <FaUserCircle className="me-2" />
+                                {getEmail()}
+                            </span>
 
-                        <Link
-                            className="btn btn-outline-light me-2"
-                            to="/wishlist">
+                            <Link
+                                className="btn btn-outline-light me-2"
+                                to="/wishlist"
+                            >
+                                <FaHeart /> Wishlist
+                            </Link>
 
-                            Wishlist
+                            <Link
+                                className="btn btn-outline-light me-2"
+                                to="/cart"
+                            >
+                                <FaShoppingCart /> Cart
+                            </Link>
 
-                        </Link>
+                            <Link
+                                className="btn btn-outline-light me-2"
+                                to="/orders"
+                            >
+                                <FaClipboardList /> Orders
+                            </Link>
 
-                        <Link
-                            className="btn btn-outline-light me-2"
-                            to="/cart">
+                            <button
+                                className="btn btn-danger"
+                                onClick={handleLogout}
+                            >
+                                <FaSignOutAlt /> Logout
+                            </button>
 
-                            Cart
+                        </div>
 
-                        </Link>
+                        :
 
-                        <Link
-                            className="btn btn-outline-light me-2"
-                            to="/orders">
+                        <div>
 
-                            Orders
+                            <Link
+                                className="btn btn-outline-light me-2"
+                                to="/login"
+                            >
+                                Login
+                            </Link>
 
-                        </Link>
+                            <Link
+                                className="btn btn-warning"
+                                to="/register"
+                            >
+                                Register
+                            </Link>
 
-                        <button
-                            className="btn btn-danger"
-                            onClick={handleLogout}>
+                        </div>
 
-                            Logout
+                }
 
-                        </button>
-
-                    </div>
-
-                    :
-
-                    <div>
-
-                        <Link
-                            className="btn btn-outline-light me-2"
-                            to="/login">
-
-                            Login
-
-                        </Link>
-
-                        <Link
-                            className="btn btn-warning"
-                            to="/register">
-
-                            Register
-
-                        </Link>
-
-                    </div>
-
-            }
+            </div>
 
         </nav>
 
