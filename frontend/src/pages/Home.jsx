@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import ProductCard from "../components/ProductCard";
-
+import { toast } from "react-toastify";
 function Home() {
 
     const [products, setProducts] = useState([]);

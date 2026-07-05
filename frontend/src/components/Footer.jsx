@@ -8,7 +8,7 @@ function Footer() {
 
             <small className="text-muted">
 
-                © 2026 Campus Marketplace Pro
+                © 2026 Campus Marketplace
 
             </small>
 

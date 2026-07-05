@@ -3,7 +3,7 @@ import api from "../services/api";
 import { getEmail } from "../services/auth";
 import { Link } from "react-router-dom";
 import ProductImage from "./ProductImage";
-
+import { toast } from "react-toastify";
 function ProductCard({ product }) {
 
     const addToWishlist = async () => {
