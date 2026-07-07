@@ -15,6 +15,7 @@ import campusmarketplace.repository.ProductRepository;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,15 +33,17 @@ public class ProductService {
         }
 
         @CacheEvict(value = "products", allEntries = true)
-        public String createProduct(CreateProductRequest request) {
+        public String createProduct(CreateProductRequest request, String requesterEmail) {
 
                 Product product = new Product();
 
                 product.setTitle(request.getTitle());
                 product.setDescription(request.getDescription());
                 product.setPrice(request.getPrice());
-                product.setSellerEmail(request.getSellerEmail());
+                // Trust the JWT-authenticated email, not whatever the client sent in the body.
+                product.setSellerEmail(requesterEmail);
                 product.setCategory(request.getCategory());
+                product.setImageUrl(request.getImageUrl());
 
                 productRepository.save(product);
 
@@ -59,12 +62,19 @@ public class ProductService {
         @CacheEvict(value = "products", allEntries = true)
         public String updateProduct(
                         Long id,
-                        UpdateProductRequest request) {
+                        UpdateProductRequest request,
+                        String requesterEmail) {
 
                 Product product = productRepository.findById(id).orElse(null);
 
                 if (product == null) {
                         return "Product not found";
+                }
+
+                if (!product.getSellerEmail().equalsIgnoreCase(requesterEmail)) {
+                        // Not the owner — do not allow the edit.
+                        throw new AccessDeniedException(
+                                        "You do not have permission to edit this product");
                 }
 
                 product.setTitle(request.getTitle());
@@ -77,12 +87,17 @@ public class ProductService {
         }
 
         @CacheEvict(value = "products", allEntries = true)
-        public String deleteProduct(Long id) {
+        public String deleteProduct(Long id, String requesterEmail) {
 
                 Product product = productRepository.findById(id).orElse(null);
 
                 if (product == null) {
                         return "Product not found";
+                }
+
+                if (!product.getSellerEmail().equalsIgnoreCase(requesterEmail)) {
+                        throw new AccessDeniedException(
+                                        "You do not have permission to delete this product");
                 }
 
                 productRepository.delete(product);
@@ -154,4 +169,5 @@ public class ProductService {
 
                 return recommendations;
         }
+
 }

@@ -2,15 +2,29 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import ProductCard from "../components/ProductCard";
 import { toast } from "react-toastify";
+
 function Home() {
 
     const [products, setProducts] = useState([]);
     const [search, setSearch] = useState("");
+    const [debouncedSearch, setDebouncedSearch] = useState("");
     const [category, setCategory] = useState("All");
 
     useEffect(() => {
         loadProducts();
     }, []);
+
+    // Debounce: wait until the user pauses typing for 400ms before
+    // updating debouncedSearch (the value we actually filter/search with).
+    // Every keystroke resets the timer via the cleanup function, so only
+    // the last keystroke in a burst of typing survives.
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(search);
+        }, 400);
+
+        return () => clearTimeout(timer);
+    }, [search]);
 
     const loadProducts = async () => {
 
@@ -40,7 +54,7 @@ function Home() {
 
     <h1 className="fw-bold display-5">
 
-        Campus Marketplace Pro
+        Campus Marketplace
 
     </h1>
 
@@ -121,7 +135,7 @@ function Home() {
                 .filter((product) =>
                     product.title
                         .toLowerCase()
-                        .includes(search.toLowerCase())
+                        .includes(debouncedSearch.toLowerCase())
                 )
                 .filter((product) =>
                     category === "All"

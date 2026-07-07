@@ -6,6 +6,7 @@ import campusmarketplace.dto.UpdateProductRequest;
 import campusmarketplace.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 import campusmarketplace.entity.Product;
+import org.springframework.security.core.Authentication;
 import java.util.List;
 
 @RestController
@@ -22,10 +23,13 @@ public class ProductController {
 
         @PostMapping
         public String createProduct(
-                        @RequestBody CreateProductRequest request) {
+                        @RequestBody CreateProductRequest request,
+                        Authentication authentication) {
 
+                // authentication.getName() is the email JwtAuthenticationFilter put
+                // into the SecurityContext after validating the JWT.
                 return productService
-                                .createProduct(request);
+                                .createProduct(request, authentication.getName());
         }
 
         @GetMapping
@@ -43,18 +47,20 @@ public class ProductController {
         @PutMapping("/{id}")
         public String updateProduct(
                         @PathVariable Long id,
-                        @RequestBody UpdateProductRequest request) {
+                        @RequestBody UpdateProductRequest request,
+                        Authentication authentication) {
 
                 return productService
-                                .updateProduct(id, request);
+                                .updateProduct(id, request, authentication.getName());
         }
 
         @DeleteMapping("/{id}")
         public String deleteProduct(
-                        @PathVariable Long id) {
+                        @PathVariable Long id,
+                        Authentication authentication) {
 
                 return productService
-                                .deleteProduct(id);
+                                .deleteProduct(id, authentication.getName());
         }
 
         @GetMapping("/search")

@@ -66,7 +66,7 @@ function ProductCard({ product }) {
 
             <div className="card-body text-center d-flex flex-column">
 
-                <ProductImage title={product.title} />
+                <ProductImage title={product.title} imageUrl={product.imageUrl} />
                 
                 <Link
                     to={`/product/${product.id}`}

@@ -24,4 +24,6 @@ public class Product implements Serializable {
     private String sellerEmail;
 
     private String category;
+
+    private String imageUrl;
 }

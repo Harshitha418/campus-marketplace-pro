@@ -1,29 +1,18 @@
-function ProductImage({ title }) {
+function ProductImage({ title, imageUrl }) {
 
-    let image = "https://placehold.co/250x250?text=Product";
-
-    if (title.toLowerCase().includes("book")) {
-        image = "https://placehold.co/250x250?text=📚+Book";
-    }
-    else if (title.toLowerCase().includes("note")) {
-        image = "https://placehold.co/250x250?text=📝+Notes";
-    }
-    else if (
-        title.toLowerCase().includes("laptop") ||
-        title.toLowerCase().includes("mouse") ||
-        title.toLowerCase().includes("keyboard")
-    ) {
-        image = "https://placehold.co/250x250?text=💻+Electronics";
-    }
+    const fallback = "https://placehold.co/250x250?text=Product";
 
     return (
         <img
-            src={image}
+            src={imageUrl || fallback}
             alt={title}
             className="img-fluid rounded"
+            onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = fallback;
+            }}
         />
     );
-
 }
 
 export default ProductImage;

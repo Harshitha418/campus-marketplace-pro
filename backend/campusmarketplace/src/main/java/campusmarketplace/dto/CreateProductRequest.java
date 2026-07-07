@@ -7,6 +7,7 @@ public class CreateProductRequest {
     private Double price;
     private String sellerEmail;
     private String category;
+    private String imageUrl;
 
     public String getTitle() {
         return title;
@@ -46,5 +47,13 @@ public class CreateProductRequest {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

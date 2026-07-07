@@ -27,12 +27,20 @@ public class SecurityConfig {
                 http
                                 .csrf(csrf -> csrf.disable())
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers(
-                                                                "/api/auth/**",
-                                                                "/api/products/**")
+                                                .requestMatchers(HttpMethod.OPTIONS, "/**")
                                                 .permitAll()
-                                                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**")
+                                                .requestMatchers("/api/auth/**")
                                                 .permitAll()
+                                                // Anyone can browse/search products (read-only)
+                                                .requestMatchers(HttpMethod.GET, "/api/products/**")
+                                                .permitAll()
+                                                // Creating, editing, deleting a product requires a valid JWT
+                                                .requestMatchers(HttpMethod.POST, "/api/products/**")
+                                                .authenticated()
+                                                .requestMatchers(HttpMethod.PUT, "/api/products/**")
+                                                .authenticated()
+                                                .requestMatchers(HttpMethod.DELETE, "/api/products/**")
+                                                .authenticated()
                                                 .anyRequest()
                                                 .authenticated())
                                 .httpBasic(Customizer.withDefaults());

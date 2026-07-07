@@ -29,7 +29,7 @@ function Navbar() {
                     className="navbar-brand fw-bold fs-3"
                     to="/"
                 >
-                    🛍 Campus Marketplace
+                    Campus Marketplace
                 </Link>
 
                 {
