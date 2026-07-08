@@ -74,7 +74,7 @@ public class CartService {
                 item.setPrice(product.getPrice());
                 item.setCategory(product.getCategory());
                 item.setQuantity(cart.getQuantity());
-
+                item.setImageUrl(product.getImageUrl());
                 response.add(item);
             }
         }

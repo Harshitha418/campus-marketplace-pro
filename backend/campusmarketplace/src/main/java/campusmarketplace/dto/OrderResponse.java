@@ -10,6 +10,7 @@ public class OrderResponse {
     private String category;
     private Integer quantity;
     private String status;
+    private String imageUrl;
 
     public Long getId() {
         return id;
@@ -73,6 +74,14 @@ public class OrderResponse {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 }

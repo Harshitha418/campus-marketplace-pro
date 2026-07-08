@@ -58,7 +58,7 @@ public class WishlistService {
                 dto.setDescription(product.getDescription());
                 dto.setPrice(product.getPrice());
                 dto.setCategory(product.getCategory());
-
+                dto.setImageUrl(product.getImageUrl());
                 response.add(dto);
             }
         }

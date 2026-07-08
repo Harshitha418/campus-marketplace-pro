@@ -129,6 +129,7 @@ function Orders() {
 
                                         <ProductImage
                                             title={order.title}
+                                            imageUrl={order.imageUrl}
                                         />
 
                                     </div>

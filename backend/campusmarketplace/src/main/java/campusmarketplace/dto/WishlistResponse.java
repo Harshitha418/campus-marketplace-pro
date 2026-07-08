@@ -8,6 +8,7 @@ public class WishlistResponse {
     private String description;
     private Double price;
     private String category;
+    private String imageUrl;
 
     public Long getId() {
         return id;
@@ -55,5 +56,13 @@ public class WishlistResponse {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

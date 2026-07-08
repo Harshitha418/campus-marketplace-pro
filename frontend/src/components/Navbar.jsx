@@ -21,7 +21,7 @@ function Navbar() {
 
     return (
 
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
 
             <div className="container">
 

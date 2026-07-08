@@ -23,7 +23,7 @@ function App() {
 
             <Navbar />
 
-            <main className="flex-grow-1">
+            <main className="flex-grow-1" style={{ paddingTop: "70px" }}>
 
                 <Routes>
                     <Route path="/" element={<Home />} />

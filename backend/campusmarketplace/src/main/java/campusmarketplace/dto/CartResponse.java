@@ -9,6 +9,7 @@ public class CartResponse {
     private Double price;
     private String category;
     private Integer quantity;
+    private String imageUrl;
 
     public Long getId() {
         return id;
@@ -64,5 +65,13 @@ public class CartResponse {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

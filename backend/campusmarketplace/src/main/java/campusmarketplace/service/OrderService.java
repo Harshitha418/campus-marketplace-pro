@@ -63,7 +63,7 @@ public class OrderService {
                 dto.setCategory(product.getCategory());
                 dto.setQuantity(order.getQuantity());
                 dto.setStatus(order.getStatus());
-
+                dto.setImageUrl(product.getImageUrl());
                 response.add(dto);
             }
         }

@@ -132,6 +132,7 @@ function Cart() {
 
                                                 <ProductImage
                                                     title={item.title}
+                                                    imageUrl={item.imageUrl}
                                                 />
 
                                             </div>

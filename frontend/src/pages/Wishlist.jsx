@@ -150,6 +150,7 @@ function Wishlist() {
 
                                         <ProductImage
                                             title={item.title}
+                                            imageUrl={item.imageUrl}
                                         />
 
                                     </div>

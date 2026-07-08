@@ -73,11 +73,13 @@ function ProductCard({ product }) {
                     className="text-decoration-none text-dark"
                 >
 
-                    <h4 className="fw-bold">
+                    <h5 className="fw-bold" style={{ minHeight: "48px" }}>
 
-                        {product.title}
+                        {product.title.length > 40
+                            ? product.title.slice(0, 40) + "..."
+                            : product.title}
 
-                    </h4>
+                    </h5>
 
                 </Link>
 
