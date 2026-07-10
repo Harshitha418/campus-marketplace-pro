@@ -5,7 +5,8 @@ import {
     FaHeart,
     FaClipboardList,
     FaSignOutAlt,
-    FaUserCircle
+    FaUserCircle,
+    FaBars
 } from "react-icons/fa";
 
 function Navbar() {
@@ -38,10 +39,13 @@ function Navbar() {
 
                         ?
 
-                        <div className="d-flex align-items-center">
+                        <>
+
+                        {/* Desktop view — unchanged, hidden on small screens */}
+                        <div className="d-none d-md-flex align-items-center">
 
                             <span
-                                className="text-white me-4 d-none d-md-block"
+                                className="text-white me-4"
                             >
                                 <FaUserCircle className="me-2" />
                                 {getEmail()}
@@ -76,6 +80,51 @@ function Navbar() {
                             </button>
 
                         </div>
+
+                        {/* Mobile view — hamburger dropdown, hidden on medium+ screens */}
+                        <div className="d-md-none dropdown">
+
+                            <button
+                                className="btn btn-outline-light"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                            >
+                                <FaBars />
+                            </button>
+
+                            <ul className="dropdown-menu dropdown-menu-end">
+
+                                <li>
+                                    <Link className="dropdown-item" to="/wishlist">
+                                        <FaHeart className="me-2" /> Wishlist
+                                    </Link>
+                                </li>
+
+                                <li>
+                                    <Link className="dropdown-item" to="/cart">
+                                        <FaShoppingCart className="me-2" /> Cart
+                                    </Link>
+                                </li>
+
+                                <li>
+                                    <Link className="dropdown-item" to="/orders">
+                                        <FaClipboardList className="me-2" /> Orders
+                                    </Link>
+                                </li>
+
+                                <li><hr className="dropdown-divider" /></li>
+
+                                <li>
+                                    <button className="dropdown-item text-danger" onClick={handleLogout}>
+                                        <FaSignOutAlt className="me-2" /> Logout
+                                    </button>
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                        </>
 
                         :
 

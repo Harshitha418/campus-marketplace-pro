@@ -15,6 +15,8 @@ import campusmarketplace.repository.ProductRepository;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +55,10 @@ public class ProductService {
         @Cacheable("products")
         public List<Product> getAllProducts() {
                 return productRepository.findAll();
+        }
+
+        public Page<Product> getAllProductsPaged(int page, int size) {
+                return productRepository.findAll(PageRequest.of(page, size));
         }
 
         public Product getProduct(Long id) {

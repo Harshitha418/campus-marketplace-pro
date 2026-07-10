@@ -65,7 +65,7 @@ function Home() {
     </p>
 
 </div>
-        <div className="card shadow border-0 rounded-4 mb-4">
+        <div className="card shadow border-0 rounded-4 mb-4" style={{ position: "sticky", top: "80px", zIndex: 10 }}>
 
             <div className="card-body">
 
@@ -94,38 +94,19 @@ function Home() {
                 All
             </button>
 
-            <button
-                className={`btn ${
-                    category === "Books"
-                        ? "btn-primary"
-                        : "btn-outline-primary"
-                }`}
-                onClick={() => setCategory("Books")}
-            >
-                📚 Books
-            </button>
-
-            <button
-                className={`btn ${
-                    category === "Electronics"
-                        ? "btn-success"
-                        : "btn-outline-success"
-                }`}
-                onClick={() => setCategory("Electronics")}
-            >
-                💻 Electronics
-            </button>
-
-            <button
-                className={`btn ${
-                    category === "Notes"
-                        ? "btn-warning"
-                        : "btn-outline-warning"
-                }`}
-                onClick={() => setCategory("Notes")}
-            >
-                📝 Notes
-            </button>
+            {[...new Set(products.map((p) => p.category))].map((cat) => (
+                <button
+                    key={cat}
+                    className={`btn ${
+                        category === cat
+                            ? "btn-primary"
+                            : "btn-outline-primary"
+                    }`}
+                    onClick={() => setCategory(cat)}
+                >
+                    {cat}
+                </button>
+            ))}
 
         </div>
 

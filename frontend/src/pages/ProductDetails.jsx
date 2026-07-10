@@ -121,8 +121,13 @@ return (
                 <div className="col-lg-5 text-center p-5 border-end">
 
                     <img
-                        src="https://placehold.co/250x250?text=Product"
+                        src={product.imageUrl || "https://placehold.co/250x250?text=Product"}
                         className="img-fluid rounded"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://placehold.co/250x250?text=Product";
+                        }}
                     />
 
                     <p className="text-muted mt-3">

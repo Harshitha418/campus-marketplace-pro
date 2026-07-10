@@ -6,6 +6,7 @@ import campusmarketplace.dto.UpdateProductRequest;
 import campusmarketplace.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 import campusmarketplace.entity.Product;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import java.util.List;
 
@@ -35,6 +36,14 @@ public class ProductController {
         @GetMapping
         public List<Product> getAllProducts() {
                 return productService.getAllProducts();
+        }
+
+        @GetMapping("/paged")
+        public Page<Product> getAllProductsPaged(
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "10") int size) {
+
+                return productService.getAllProductsPaged(page, size);
         }
 
         @GetMapping("/{id}")
