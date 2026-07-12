@@ -1,5 +1,7 @@
 package campusmarketplace.jwt;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,54 +16,52 @@ import java.util.Collections;
 
 @Component
 public class JwtAuthenticationFilter
-        extends OncePerRequestFilter {
-    private final JwtService jwtService;
+                extends OncePerRequestFilter {
+        private final JwtService jwtService;
 
-    public JwtAuthenticationFilter(JwtService jwtService) {
-        this.jwtService = jwtService;
-    }
+        private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-    @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain)
-            throws ServletException, IOException {
-        String path = request.getServletPath();
-        if (path.startsWith("/api/auth")) {
-            filterChain.doFilter(request, response);
-            return;
+        public JwtAuthenticationFilter(JwtService jwtService) {
+                this.jwtService = jwtService;
         }
-        String header = request.getHeader("Authorization");
-        System.out.println("FILTER HIT");
-        System.out.println("HEADER = " + header);
 
-        if (header != null &&
-                header.startsWith("Bearer ")) {
-            String token = header.substring(7);
-            boolean valid = jwtService.validateToken(token);
-            System.out.println(
-                    "JWT Valid: " + valid);
-            if (!valid) {
-                response.setStatus(
-                        HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter()
-                        .write("Invalid JWT Token");
+        @Override
+        protected void doFilterInternal(
+                        HttpServletRequest request,
+                        HttpServletResponse response,
+                        FilterChain filterChain)
+                        throws ServletException, IOException {
+                String path = request.getServletPath();
+                if (path.startsWith("/api/auth")) {
+                        filterChain.doFilter(request, response);
+                        return;
+                }
+                String header = request.getHeader("Authorization");
+                logger.debug("JWT filter triggered for path: {}", request.getServletPath());
 
-                return;
-            }
-            String email = jwtService.extractEmail(token);
-            System.out.println(
-                    "Authenticated User: "
-                            + email);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    email,
-                    null,
-                    Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                if (header != null &&
+                                header.startsWith("Bearer ")) {
+                        String token = header.substring(7);
+                        boolean valid = jwtService.validateToken(token);
+                        logger.debug("JWT valid: {}", valid);
+                        if (!valid) {
+                                response.setStatus(
+                                                HttpServletResponse.SC_UNAUTHORIZED);
+                                response.getWriter()
+                                                .write("Invalid JWT Token");
+
+                                return;
+                        }
+                        String email = jwtService.extractEmail(token);
+                        logger.debug("Authenticated user: {}", email);
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                        email,
+                                        null,
+                                        Collections.emptyList());
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+                filterChain.doFilter(
+                                request,
+                                response);
         }
-        filterChain.doFilter(
-                request,
-                response);
-    }
 }

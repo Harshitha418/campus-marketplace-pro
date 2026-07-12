@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 function Register() {
 
@@ -10,7 +11,7 @@ function Register() {
         name: "",
         email: "",
         password: "",
-        role: "USER"
+        role: "BUYER"
     });
 
     const handleChange = (e) => {
@@ -36,8 +37,7 @@ function Register() {
             navigate("/login");
 
         } catch (err) {
-
-            toast.error("Registration Failed");
+            toast.error(err.response?.data?.message || "Registration Failed");
 
         }
 
@@ -70,6 +70,16 @@ function Register() {
                 name="password"
                 onChange={handleChange}
             />
+
+            <select
+                className="form-control mt-3"
+                name="role"
+                value={form.role}
+                onChange={handleChange}
+            >
+                <option value="BUYER">Buyer</option>
+                <option value="SELLER">Seller</option>
+            </select>
 
             <button
                 className="btn btn-warning mt-4"

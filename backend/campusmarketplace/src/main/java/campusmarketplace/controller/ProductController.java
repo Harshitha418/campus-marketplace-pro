@@ -1,5 +1,7 @@
 package campusmarketplace.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import campusmarketplace.dto.CreateProductRequest;
 import campusmarketplace.dto.RecommendationResponse;
 import campusmarketplace.dto.UpdateProductRequest;
@@ -9,12 +11,14 @@ import campusmarketplace.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import java.util.List;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
         private final ProductService productService;
+        private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
         public ProductController(
                         ProductService productService) {
@@ -24,7 +28,7 @@ public class ProductController {
 
         @PostMapping
         public String createProduct(
-                        @RequestBody CreateProductRequest request,
+                        @Valid @RequestBody CreateProductRequest request,
                         Authentication authentication) {
 
                 // authentication.getName() is the email JwtAuthenticationFilter put
@@ -112,7 +116,7 @@ public class ProductController {
         @GetMapping("/recommended/{email}")
         public List<RecommendationResponse> recommendedProducts(
                         @PathVariable String email) {
-                System.out.println("Recommendation API HIT: " + email);
+                logger.info("Recommendation API hit for user: {}", email);
                 return productService.getRecommendations(email);
         }
 }

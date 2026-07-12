@@ -8,16 +8,26 @@ import org.springframework.security.web.SecurityFilterChain;
 import campusmarketplace.jwt.JwtAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class SecurityConfig {
 
         private final JwtAuthenticationFilter jwtFilter;
+        private final RateLimitFilter rateLimitFilter;
 
         public SecurityConfig(
-                        JwtAuthenticationFilter jwtFilter) {
+                        JwtAuthenticationFilter jwtFilter,
+                        RateLimitFilter rateLimitFilter) {
 
                 this.jwtFilter = jwtFilter;
+                this.rateLimitFilter = rateLimitFilter;
+        }
+
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
         }
 
         @Bean
@@ -30,6 +40,10 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.OPTIONS, "/**")
                                                 .permitAll()
                                                 .requestMatchers("/api/auth/**")
+                                                .permitAll()
+                                                .requestMatchers("/swagger-ui/**", "/swagger-ui.html")
+                                                .permitAll()
+                                                .requestMatchers("/v3/api-docs/**")
                                                 .permitAll()
                                                 // Anyone can browse/search products (read-only)
                                                 .requestMatchers(HttpMethod.GET, "/api/products/**")
@@ -48,6 +62,9 @@ public class SecurityConfig {
                 http.addFilterBefore(
                                 jwtFilter,
                                 UsernamePasswordAuthenticationFilter.class);
+                http.addFilterBefore(
+                                rateLimitFilter,
+                                JwtAuthenticationFilter.class);
                 return http.build();
         }
 }

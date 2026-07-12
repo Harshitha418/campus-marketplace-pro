@@ -9,6 +9,8 @@ function Home() {
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [category, setCategory] = useState("All");
+    const [currentPage, setCurrentPage] = useState(1);
+    const productsPerPage = 9;
 
     useEffect(() => {
         loadProducts();
@@ -25,6 +27,12 @@ function Home() {
 
         return () => clearTimeout(timer);
     }, [search]);
+
+    // Whenever the search or category changes, jump back to page 1 —
+    // otherwise you could get stuck on page 5 of a now-empty filtered list.
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [debouncedSearch, category]);
 
     const loadProducts = async () => {
 
@@ -110,9 +118,9 @@ function Home() {
 
         </div>
 
-        <div className="row">
+        {(() => {
 
-            {products
+            const filtered = products
                 .filter((product) =>
                     product.title
                         .toLowerCase()
@@ -122,23 +130,64 @@ function Home() {
                     category === "All"
                         ? true
                         : product.category === category
-                )
-                .map((product) => (
+                );
 
-                    <div
-                        key={product.id}
-                        className="col-lg-4 col-md-6 mb-4"
-                    >
+            const totalPages = Math.ceil(filtered.length / productsPerPage);
+            const startIndex = (currentPage - 1) * productsPerPage;
+            const currentProducts = filtered.slice(startIndex, startIndex + productsPerPage);
 
-                        <ProductCard
-                            product={product}
-                        />
+            return (
+                <>
+
+                <div className="row">
+
+                    {currentProducts.map((product) => (
+
+                        <div
+                            key={product.id}
+                            className="col-lg-4 col-md-6 mb-4"
+                        >
+
+                            <ProductCard
+                                product={product}
+                            />
+
+                        </div>
+
+                    ))}
+
+                </div>
+
+                {totalPages > 1 && (
+                    <div className="d-flex justify-content-center gap-2 mt-4">
+
+                        <button
+                            className="btn btn-outline-dark"
+                            disabled={currentPage === 1}
+                            onClick={() => setCurrentPage((p) => p - 1)}
+                        >
+                            Previous
+                        </button>
+
+                        <span className="align-self-center">
+                            Page {currentPage} of {totalPages}
+                        </span>
+
+                        <button
+                            className="btn btn-outline-dark"
+                            disabled={currentPage === totalPages}
+                            onClick={() => setCurrentPage((p) => p + 1)}
+                        >
+                            Next
+                        </button>
 
                     </div>
+                )}
 
-                ))}
+                </>
+            );
 
-        </div>
+        })()}
 
     </div>
 

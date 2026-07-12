@@ -1,5 +1,7 @@
 package campusmarketplace.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
@@ -10,10 +12,17 @@ import java.util.Date;
 
 @Service
 public class JwtService {
+    private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
-    private static final String SECRET = "campusmarketplacejwtsecretkeycampusmarketplacejwtsecretkey";
+    @org.springframework.beans.factory.annotation.Value("${jwt.secret}")
+    private String secret;
 
-    private final SecretKey key = Keys.hmacShaKeyFor(SECRET.getBytes());
+    private SecretKey key;
+
+    @jakarta.annotation.PostConstruct
+    public void init() {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     public String generateToken(String email) {
 
@@ -41,11 +50,11 @@ public class JwtService {
 
     public boolean validateToken(String token) {
         try {
-            System.out.println("TOKEN = " + token);
             extractEmail(token);
+            logger.info("JWT validation succeeded for token: {}", token);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("JWT validation failed: {}", e.getMessage());
             return false;
         }
     }

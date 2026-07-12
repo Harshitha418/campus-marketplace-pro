@@ -1,5 +1,6 @@
 package campusmarketplace.controller;
 
+import jakarta.validation.Valid;
 import campusmarketplace.dto.LoginRequest;
 import campusmarketplace.dto.RegisterRequest;
 import campusmarketplace.service.AuthService;
@@ -17,7 +18,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request) {
+    public String register(@Valid @RequestBody RegisterRequest request) {
 
         return authService.register(request);
     }

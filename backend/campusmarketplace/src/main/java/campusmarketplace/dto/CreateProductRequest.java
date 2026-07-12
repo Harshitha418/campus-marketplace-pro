@@ -1,9 +1,15 @@
 package campusmarketplace.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
 public class CreateProductRequest {
 
+    @NotBlank(message = "Title is required")
     private String title;
     private String description;
+
+    @Positive(message = "Price must be a positive value")
     private Double price;
     private String sellerEmail;
     private String category;
