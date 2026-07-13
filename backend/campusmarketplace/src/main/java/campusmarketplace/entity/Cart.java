@@ -3,6 +3,7 @@ package campusmarketplace.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.UUID;
 
 @Entity
 @Table(name = "cart")
@@ -14,7 +15,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long productId;
+    private UUID productId;
 
     private String userEmail;
 

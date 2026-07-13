@@ -4,7 +4,7 @@ import campusmarketplace.dto.CreateReviewRequest;
 import campusmarketplace.entity.Review;
 import campusmarketplace.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
-
+import java.util.UUID;
 import java.util.List;
 
 @Service
@@ -19,7 +19,7 @@ public class ReviewService {
     }
 
     public String addReview(
-            Long productId,
+            UUID productId,
             CreateReviewRequest request) {
 
         if (request.getRating() < 1
@@ -41,7 +41,7 @@ public class ReviewService {
     }
 
     public List<Review> getReviews(
-            Long productId) {
+            UUID productId) {
 
         return reviewRepository.findByProductId(
                 productId);

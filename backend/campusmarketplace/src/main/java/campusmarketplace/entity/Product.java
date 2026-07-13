@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.io.Serializable;
+import java.util.UUID;
 
 @Entity
 @Table(name = "products")
@@ -12,8 +13,8 @@ import java.io.Serializable;
 public class Product implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     private String title;
 
@@ -26,4 +27,6 @@ public class Product implements Serializable {
     private String category;
 
     private String imageUrl;
+
+    private static final long serialVersionUID = 1L;
 }

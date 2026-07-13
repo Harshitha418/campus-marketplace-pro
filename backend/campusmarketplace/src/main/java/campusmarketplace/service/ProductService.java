@@ -19,19 +19,25 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import campusmarketplace.strategy.SortStrategyFactory;
+import campusmarketplace.strategy.ProductSortStrategy;
+import java.util.UUID;
 
 @Service
 public class ProductService {
 
         private final ProductRepository productRepository;
         private final OrderRepository orderRepository;
+        private final SortStrategyFactory sortStrategyFactory;
 
         public ProductService(
                         ProductRepository productRepository,
-                        OrderRepository orderRepository) {
+                        OrderRepository orderRepository,
+                        SortStrategyFactory sortStrategyFactory) {
 
                 this.productRepository = productRepository;
                 this.orderRepository = orderRepository;
+                this.sortStrategyFactory = sortStrategyFactory;
         }
 
         @CacheEvict(value = "products", allEntries = true)
@@ -57,17 +63,31 @@ public class ProductService {
                 return productRepository.findAll();
         }
 
+        public List<Product> getSortedProducts(String sortBy) {
+
+                List<Product> products = productRepository.findAll();
+
+                ProductSortStrategy strategy = sortStrategyFactory.getStrategy(sortBy);
+
+                if (strategy == null) {
+                        // Unknown sort key — return unsorted rather than failing.
+                        return products;
+                }
+
+                return strategy.sort(products);
+        }
+
         public Page<Product> getAllProductsPaged(int page, int size) {
                 return productRepository.findAll(PageRequest.of(page, size));
         }
 
-        public Product getProduct(Long id) {
+        public Product getProduct(UUID id) {
                 return productRepository.findById(id).orElse(null);
         }
 
         @CacheEvict(value = "products", allEntries = true)
         public String updateProduct(
-                        Long id,
+                        UUID id,
                         UpdateProductRequest request,
                         String requesterEmail) {
 
@@ -93,7 +113,7 @@ public class ProductService {
         }
 
         @CacheEvict(value = "products", allEntries = true)
-        public String deleteProduct(Long id, String requesterEmail) {
+        public String deleteProduct(UUID id, String requesterEmail) {
 
                 Product product = productRepository.findById(id).orElse(null);
 

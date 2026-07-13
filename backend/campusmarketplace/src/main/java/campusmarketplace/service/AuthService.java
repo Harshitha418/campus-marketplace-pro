@@ -44,14 +44,16 @@ public class AuthService {
     public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail());
         if (user == null) {
-            return new LoginResponse("User not found", null);
+            return LoginResponse.builder().message("User not found").build();
         }
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return new LoginResponse("Invalid password", null);
+            return LoginResponse.builder().message("Invalid password").build();
         }
         String token = jwtService.generateToken(user.getEmail());
-        return new LoginResponse(
-                "Login successful",
-                token);
+        return LoginResponse.builder()
+                .message("Login successful")
+                .token(token)
+                .role(user.getRole())
+                .build();
     }
 }

@@ -11,6 +11,7 @@ function Home() {
     const [category, setCategory] = useState("All");
     const [currentPage, setCurrentPage] = useState(1);
     const productsPerPage = 9;
+    const [sortBy, setSortBy] = useState("default");
 
     useEffect(() => {
         loadProducts();
@@ -32,7 +33,7 @@ function Home() {
     // otherwise you could get stuck on page 5 of a now-empty filtered list.
     useEffect(() => {
         setCurrentPage(1);
-    }, [debouncedSearch, category]);
+    }, [debouncedSearch, category, sortBy]);
 
     const loadProducts = async () => {
 
@@ -87,6 +88,21 @@ function Home() {
 
             </div>
 
+            <div className="d-flex justify-content-end mb-4">
+
+            <select
+                className="form-select w-auto"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+            >
+                <option value="default">Sort by: Default</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+                <option value="title">Title: A to Z</option>
+            </select>
+
+        </div>
+
         </div>
 
         <div className="d-flex flex-wrap justify-content-center gap-2 mb-5">
@@ -130,7 +146,13 @@ function Home() {
                     category === "All"
                         ? true
                         : product.category === category
-                );
+                )
+                .sort((a, b) => {
+                    if (sortBy === "price_asc") return a.price - b.price;
+                    if (sortBy === "price_desc") return b.price - a.price;
+                    if (sortBy === "title") return a.title.localeCompare(b.title);
+                    return 0;
+                });
 
             const totalPages = Math.ceil(filtered.length / productsPerPage);
             const startIndex = (currentPage - 1) * productsPerPage;

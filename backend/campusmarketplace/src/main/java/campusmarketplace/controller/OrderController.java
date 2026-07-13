@@ -4,6 +4,7 @@ import campusmarketplace.service.OrderService;
 import org.springframework.web.bind.annotation.*;
 import campusmarketplace.dto.OrderResponse;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -19,7 +20,7 @@ public class OrderController {
 
     @PostMapping("/place")
     public String placeOrder(
-            @RequestParam Long productId,
+            @RequestParam UUID productId,
             @RequestParam String email,
             @RequestParam Integer quantity) {
 

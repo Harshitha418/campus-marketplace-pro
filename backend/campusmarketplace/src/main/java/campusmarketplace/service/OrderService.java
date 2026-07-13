@@ -8,6 +8,7 @@ import campusmarketplace.entity.Product;
 import campusmarketplace.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderService {
@@ -24,7 +25,7 @@ public class OrderService {
     }
 
     public String placeOrder(
-            Long productId,
+            UUID productId,
             String userEmail,
             Integer quantity) {
 

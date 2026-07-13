@@ -1,9 +1,11 @@
 package campusmarketplace.dto;
 
+import java.util.UUID;
+
 public class CartResponse {
 
     private Long id;
-    private Long productId;
+    private UUID productId;
     private String title;
     private String description;
     private Double price;
@@ -19,11 +21,11 @@ public class CartResponse {
         this.id = id;
     }
 
-    public Long getProductId() {
+    public UUID getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(UUID productId) {
         this.productId = productId;
     }
 

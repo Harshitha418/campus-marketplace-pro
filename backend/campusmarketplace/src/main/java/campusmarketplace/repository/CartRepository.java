@@ -4,14 +4,15 @@ import campusmarketplace.entity.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 import java.util.List;
+import java.util.UUID;
 
 public interface CartRepository
-        extends JpaRepository<Cart, Long> {
+                extends JpaRepository<Cart, Long> {
 
-    List<Cart> findByUserEmail(
-            String userEmail);
+        List<Cart> findByUserEmail(
+                        String userEmail);
 
-    Optional<Cart> findByProductIdAndUserEmail(
-            Long productId,
-            String userEmail);
+        Optional<Cart> findByProductIdAndUserEmail(
+                        UUID productId,
+                        String userEmail);
 }

@@ -4,7 +4,7 @@ import campusmarketplace.dto.CreateReviewRequest;
 import campusmarketplace.entity.Review;
 import campusmarketplace.service.ReviewService;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.UUID;
 import java.util.List;
 
 @RestController
@@ -21,7 +21,7 @@ public class ReviewController {
 
     @PostMapping("/{productId}")
     public String addReview(
-            @PathVariable Long productId,
+            @PathVariable UUID productId,
             @RequestBody CreateReviewRequest request) {
 
         return reviewService.addReview(
@@ -31,7 +31,7 @@ public class ReviewController {
 
     @GetMapping("/{productId}")
     public List<Review> getReviews(
-            @PathVariable Long productId) {
+            @PathVariable UUID productId) {
 
         return reviewService.getReviews(
                 productId);

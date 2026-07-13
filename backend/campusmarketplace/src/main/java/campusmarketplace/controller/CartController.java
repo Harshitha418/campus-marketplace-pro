@@ -4,6 +4,7 @@ import campusmarketplace.service.CartService;
 import org.springframework.web.bind.annotation.*;
 import campusmarketplace.dto.CartResponse;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -19,7 +20,7 @@ public class CartController {
 
     @PostMapping("/{productId}")
     public String addToCart(
-            @PathVariable Long productId,
+            @PathVariable UUID productId,
             @RequestParam String email) {
 
         return cartService

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import java.util.List;
 import jakarta.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
@@ -42,6 +43,12 @@ public class ProductController {
                 return productService.getAllProducts();
         }
 
+        @GetMapping("/sorted")
+        public List<Product> getSortedProducts(
+                        @RequestParam(defaultValue = "price_asc") String sortBy) {
+                return productService.getSortedProducts(sortBy);
+        }
+
         @GetMapping("/paged")
         public Page<Product> getAllProductsPaged(
                         @RequestParam(defaultValue = "0") int page,
@@ -52,14 +59,14 @@ public class ProductController {
 
         @GetMapping("/{id}")
         public Product getProduct(
-                        @PathVariable Long id) {
+                        @PathVariable UUID id) {
 
                 return productService.getProduct(id);
         }
 
         @PutMapping("/{id}")
         public String updateProduct(
-                        @PathVariable Long id,
+                        @PathVariable UUID id,
                         @RequestBody UpdateProductRequest request,
                         Authentication authentication) {
 
@@ -69,7 +76,7 @@ public class ProductController {
 
         @DeleteMapping("/{id}")
         public String deleteProduct(
-                        @PathVariable Long id,
+                        @PathVariable UUID id,
                         Authentication authentication) {
 
                 return productService

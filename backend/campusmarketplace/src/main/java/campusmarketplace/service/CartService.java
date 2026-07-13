@@ -8,6 +8,7 @@ import campusmarketplace.entity.Product;
 import campusmarketplace.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CartService {
@@ -24,7 +25,7 @@ public class CartService {
     }
 
     public String addToCart(
-            Long productId,
+            UUID productId,
             String userEmail) {
 
         Cart cart = cartRepository

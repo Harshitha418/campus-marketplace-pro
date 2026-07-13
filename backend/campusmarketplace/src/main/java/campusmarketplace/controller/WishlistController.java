@@ -4,6 +4,7 @@ import campusmarketplace.service.WishlistService;
 import org.springframework.web.bind.annotation.*;
 import campusmarketplace.dto.WishlistResponse;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/wishlist")
@@ -19,7 +20,7 @@ public class WishlistController {
 
     @PostMapping("/{productId}")
     public String addToWishlist(
-            @PathVariable Long productId,
+            @PathVariable UUID productId,
             @RequestParam String email) {
 
         return wishlistService

@@ -8,6 +8,7 @@ import campusmarketplace.entity.Product;
 import campusmarketplace.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class WishlistService {
@@ -24,7 +25,7 @@ public class WishlistService {
     }
 
     public String addToWishlist(
-            Long productId,
+            UUID productId,
             String userEmail) {
 
         Wishlist wishlist = new Wishlist();
