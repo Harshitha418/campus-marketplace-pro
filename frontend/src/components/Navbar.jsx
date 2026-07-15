@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { isLoggedIn, logout, getEmail } from "../services/auth";
+import { isLoggedIn, logout } from "../services/auth";
 import {
     FaShoppingCart,
     FaHeart,
@@ -44,12 +44,13 @@ function Navbar() {
                         {/* Desktop view — unchanged, hidden on small screens */}
                         <div className="d-none d-md-flex align-items-center">
 
-                            <span
-                                className="text-white me-4"
+                            <Link
+                                className="btn btn-outline-light me-3"
+                                to="/account"
                             >
                                 <FaUserCircle className="me-2" />
-                                {getEmail()}
-                            </span>
+                                Account
+                            </Link>
 
                             <Link
                                 className="btn btn-outline-light me-2"

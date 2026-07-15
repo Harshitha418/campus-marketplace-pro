@@ -1,7 +1,14 @@
-export function saveLogin(token, email) {
+export function saveLogin(token, email, role) {
 
     localStorage.setItem("token", token);
     localStorage.setItem("email", email);
+    localStorage.setItem("role", role);
+
+}
+
+export function getRole() {
+
+    return localStorage.getItem("role");
 
 }
 
@@ -21,7 +28,7 @@ export function logout() {
 
     localStorage.removeItem("token");
     localStorage.removeItem("email");
-
+    localStorage.removeItem("role");
 }
 
 export function isLoggedIn() {

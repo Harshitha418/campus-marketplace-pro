@@ -20,6 +20,8 @@ public class User {
     @Column(nullable = false)
     private String role;
 
+    private String shippingAddress;
+
     public User() {
     }
 
@@ -61,5 +63,13 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
     }
 }

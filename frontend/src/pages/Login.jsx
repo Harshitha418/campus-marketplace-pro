@@ -26,11 +26,15 @@ function Login() {
 
             });
 
-            saveLogin(response.data.token, email);
+            saveLogin(response.data.token, email, response.data.role);
 
             setMessage("Login Successful!");
 
-            navigate("/");
+            if (response.data.role === "SELLER") {
+                navigate("/seller");
+            } else {
+                navigate("/");
+            }
 
         }
 

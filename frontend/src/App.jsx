@@ -3,15 +3,17 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Account from "./pages/Account";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
 import Orders from "./pages/Orders";
 import AdminDashboard from "./pages/AdminDashboard";
-
+import SellerDashboard from "./pages/SellerDashboard";
+import AddProduct from "./pages/AddProduct";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
+import SellerRoute from "./components/SellerRoute";
 function App() {
 
     return (
@@ -31,9 +33,16 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/product/:id" element={<ProductDetails />} />
                     <Route path="/cart" element={<Cart />} />
+                    <Route path="/account" element={<Account />} />
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/orders" element={<Orders />} />
                     <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/seller" element={
+                        <SellerRoute><SellerDashboard /></SellerRoute>
+                    } />
+                    <Route path="/add-product" element={
+                        <SellerRoute><AddProduct /></SellerRoute>
+                    } />
                 </Routes>
 
             </main>
