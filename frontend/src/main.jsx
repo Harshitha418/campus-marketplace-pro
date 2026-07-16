@@ -7,10 +7,13 @@ import "./styles/global.css";
 import App from "./App";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
+import { CartProvider } from "./context/CartContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <App />
+    <CartProvider>
+      <App />
+    </CartProvider>
     <ToastContainer
         position="bottom-right"
         autoClose={2500}

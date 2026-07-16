@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { isLoggedIn, logout } from "../services/auth";
+import { useCart } from "../context/CartContext";
+
 import {
     FaShoppingCart,
     FaHeart,
@@ -12,7 +14,7 @@ import {
 function Navbar() {
 
     const navigate = useNavigate();
-
+    const { cartCount } = useCart();
     const handleLogout = () => {
 
         logout();
@@ -64,6 +66,11 @@ function Navbar() {
                                 to="/cart"
                             >
                                 <FaShoppingCart /> Cart
+                                {cartCount > 0 && (
+                                    <span className="badge bg-danger rounded-pill ms-2">
+                                        {cartCount}
+                                    </span>
+                                )}
                             </Link>
 
                             <Link

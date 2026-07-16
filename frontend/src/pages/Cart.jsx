@@ -7,11 +7,13 @@ import { toast } from "react-toastify";
 import LoadingSpinner from "../components/LoadingSpinner";
 import EmptyState from "../components/EmptyState";
 import ProductImage from "../components/ProductImage";
+import { useCart } from "../context/CartContext";
 
 function Cart() {
 
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { refreshCart } = useCart();
 
     useEffect(() => {
         loadCart();
@@ -56,6 +58,7 @@ function Cart() {
             toast.success("Item removed");
 
             loadCart();
+            refreshCart();
 
         } catch (error) {
 
@@ -189,7 +192,7 @@ function Cart() {
 
                                                 <h5 className="fw-bold">
 
-                                                    ₹ {item.price * item.quantity}
+                                                    ₹ {(item.price * item.quantity).toFixed(2)}
 
                                                 </h5>
 
@@ -228,7 +231,7 @@ function Cart() {
 
                                 <h2 className="text-success fw-bold">
 
-                                    ₹ {total}
+                                    ₹ {total.toFixed(2)}
 
                                 </h2>
 

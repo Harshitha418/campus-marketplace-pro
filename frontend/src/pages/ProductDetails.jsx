@@ -4,11 +4,12 @@ import api from "../services/api";
 import { FaHeart, FaShoppingCart, FaTag } from "react-icons/fa";
 import { getEmail } from "../services/auth";
 import { toast } from "react-toastify";
+import { useCart } from "../context/CartContext";
 
 function ProductDetails() {
 
     const { id } = useParams();
-
+    const { refreshCart } = useCart();
     const [product, setProduct] = useState(null);
 
     useEffect(() => {
@@ -74,7 +75,7 @@ function ProductDetails() {
         );
 
         toast.success("🛒 Added to Cart!");
-
+        refreshCart();
     };
 
     if (!product) {
