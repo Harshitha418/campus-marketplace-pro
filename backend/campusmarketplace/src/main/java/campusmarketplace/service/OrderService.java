@@ -72,6 +72,37 @@ public class OrderService {
         return response;
     }
 
+    public List<OrderResponse> getAllOrders() {
+
+        List<OrderEntity> orders = orderRepository.findAll();
+
+        List<OrderResponse> response = new ArrayList<>();
+
+        for (OrderEntity order : orders) {
+
+            Product product = productRepository.findById(order.getProductId())
+                    .orElse(null);
+
+            if (product != null) {
+
+                OrderResponse dto = new OrderResponse();
+
+                dto.setId(order.getId());
+                dto.setProductId(product.getId());
+                dto.setTitle(product.getTitle());
+                dto.setDescription(product.getDescription());
+                dto.setPrice(product.getPrice());
+                dto.setCategory(product.getCategory());
+                dto.setQuantity(order.getQuantity());
+                dto.setStatus(order.getStatus());
+                dto.setImageUrl(product.getImageUrl());
+                response.add(dto);
+            }
+        }
+
+        return response;
+    }
+
     public String updateStatus(
             Long id,
             String status) {

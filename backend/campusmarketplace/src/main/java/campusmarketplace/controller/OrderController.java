@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import campusmarketplace.dto.OrderResponse;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -38,6 +39,14 @@ public class OrderController {
                 email);
     }
 
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<OrderResponse> getAllOrders() {
+
+        return orderService.getAllOrders();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public String updateStatus(
             @PathVariable Long id,

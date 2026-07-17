@@ -12,7 +12,8 @@ import campusmarketplace.service.JwtService;
 import java.io.IOException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import java.util.Collections;
+import java.util.List;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Component
 public class JwtAuthenticationFilter
@@ -53,11 +54,19 @@ public class JwtAuthenticationFilter
                                 return;
                         }
                         String email = jwtService.extractEmail(token);
-                        logger.debug("Authenticated user: {}", email);
+                        String role = jwtService.extractRole(token);
+                        logger.debug("Authenticated user: {} with role: {}", email, role);
+
+                        // Spring Security expects the "ROLE_" prefix when using hasRole("ADMIN").
+                        // Older tokens may have no role claim, so default to empty authorities.
+                        List<SimpleGrantedAuthority> authorities = (role == null)
+                                        ? List.of()
+                                        : List.of(new SimpleGrantedAuthority("ROLE_" + role));
+
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                                         email,
                                         null,
-                                        Collections.emptyList());
+                                        authorities);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
                 filterChain.doFilter(

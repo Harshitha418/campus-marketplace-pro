@@ -12,6 +12,7 @@ function Wishlist() {
 
     const [wishlist, setWishlist] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [category, setCategory] = useState("All");
 
     useEffect(() => {
         loadWishlist();
@@ -93,6 +94,10 @@ function Wishlist() {
 
     };
 
+    const filteredWishlist = category === "All"
+        ? wishlist
+        : wishlist.filter((item) => item.category === category);
+
     if (loading) {
 
         return (
@@ -115,6 +120,35 @@ function Wishlist() {
 
             </h2>
 
+            {wishlist.length > 0 && (
+
+                <div className="d-flex flex-wrap gap-2 mb-4">
+
+                    <button
+                        className={`btn btn-sm ${
+                            category === "All" ? "btn-dark" : "btn-outline-dark"
+                        }`}
+                        onClick={() => setCategory("All")}
+                    >
+                        All ({wishlist.length})
+                    </button>
+
+                    {[...new Set(wishlist.map((item) => item.category))].map((cat) => (
+                        <button
+                            key={cat}
+                            className={`btn btn-sm ${
+                                category === cat ? "btn-primary" : "btn-outline-primary"
+                            }`}
+                            onClick={() => setCategory(cat)}
+                        >
+                            {cat} ({wishlist.filter((i) => i.category === cat).length})
+                        </button>
+                    ))}
+
+                </div>
+
+            )}
+
             {
 
                 wishlist.length === 0 ?
@@ -135,7 +169,7 @@ function Wishlist() {
 
                     :
 
-                    wishlist.map((item) => (
+                    filteredWishlist.map((item) => (
 
                         <div
                             key={item.id}

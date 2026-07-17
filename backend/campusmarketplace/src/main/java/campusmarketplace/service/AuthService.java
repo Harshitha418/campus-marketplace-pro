@@ -49,7 +49,7 @@ public class AuthService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             return LoginResponse.builder().message("Invalid password").build();
         }
-        String token = jwtService.generateToken(user.getEmail());
+        String token = jwtService.generateToken(user.getEmail(), user.getRole());
         return LoginResponse.builder()
                 .message("Login successful")
                 .token(token)
