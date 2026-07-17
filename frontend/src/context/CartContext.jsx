@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import api from "../services/api";
-import { isLoggedIn, getEmail } from "../services/auth";
+import { isLoggedIn } from "../services/auth";
 
 const CartContext = createContext();
 
@@ -23,9 +23,7 @@ export function CartProvider({ children }) {
 
         try {
 
-            const response = await api.get("/cart", {
-                params: { email: getEmail() }
-            });
+            const response = await api.get("/cart");
 
             // Sum quantities, not just number of rows —
             // 3 of one item should count as 3.
@@ -34,11 +32,9 @@ export function CartProvider({ children }) {
                 0
             );
 
-            console.log("refreshCart -> total:", total, response.data);
             setCartCount(total);
 
         } catch (error) {
-            console.log("refreshCart FAILED:", error);
             setCartCount(0);
         }
 

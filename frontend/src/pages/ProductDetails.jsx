@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api";
 import { FaHeart, FaShoppingCart, FaTag } from "react-icons/fa";
-import { getEmail } from "../services/auth";
 import { toast } from "react-toastify";
 import { useCart } from "../context/CartContext";
 
@@ -28,25 +27,7 @@ function ProductDetails() {
 
     const addToWishlist = async () => {
 
-        const email = getEmail();
-
-        await api.post(
-
-            `/wishlist/${product.id}`,
-
-            null,
-
-            {
-
-                params: {
-
-                    email
-
-                }
-
-            }
-
-        );
+        await api.post(`/wishlist/${product.id}`);
 
         toast.success("❤️ Added to Wishlist!");
 
@@ -54,25 +35,7 @@ function ProductDetails() {
 
     const addToCart = async () => {
 
-        const email = getEmail();
-
-        await api.post(
-
-            `/cart/${product.id}`,
-
-            null,
-
-            {
-
-                params: {
-
-                    email
-
-                }
-
-            }
-
-        );
+        await api.post(`/cart/${product.id}`);
 
         toast.success("🛒 Added to Cart!");
         refreshCart();

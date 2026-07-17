@@ -42,7 +42,7 @@ function AdminDashboard() {
 
         try {
 
-            await api.put(`/orders/${id}/status`, null, {
+            await api.put(`/orders/${id}`, null, {
                 params: { status }
             });
 

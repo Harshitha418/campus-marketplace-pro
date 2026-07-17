@@ -32,6 +32,8 @@ function Login() {
 
             if (response.data.role === "SELLER") {
                 navigate("/seller");
+            } else if (response.data.role === "ADMIN") {
+                navigate("/admin");
             } else {
                 navigate("/");
             }

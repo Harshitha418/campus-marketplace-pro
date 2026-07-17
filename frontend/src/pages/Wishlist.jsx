@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import { getEmail } from "../services/auth";
 import { FaShoppingCart, FaTrash, FaTag } from "react-icons/fa";
 import { toast } from "react-toastify";
 
@@ -25,13 +24,7 @@ function Wishlist() {
         try {
 
             const response = await api.get(
-                "/wishlist",
-                {
-                    params: {
-                        email: getEmail()
-                    }
-                }
-            );
+                "/wishlist");
 
             setWishlist(response.data);
 
@@ -72,13 +65,7 @@ function Wishlist() {
         try {
 
             await api.post(
-                `/cart/${productId}`,
-                null,
-                {
-                    params: {
-                        email: getEmail()
-                    }
-                }
+                `/cart/${productId}`
             );
 
             toast.success("Added to Cart!");

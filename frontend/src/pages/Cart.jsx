@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import { getEmail } from "../services/auth";
 import { FaTrash, FaTag } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../components/LoadingSpinner";
 import EmptyState from "../components/EmptyState";
 import ProductImage from "../components/ProductImage";
 import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
 
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const { refreshCart } = useCart();
+    const navigate = useNavigate();
+    const [checkingOut, setCheckingOut] = useState(false);
 
     useEffect(() => {
         loadCart();
@@ -25,14 +26,7 @@ function Cart() {
 
         try {
 
-            const response = await api.get(
-                "/cart",
-                {
-                    params: {
-                        email: getEmail()
-                    }
-                }
-            );
+            const response = await api.get("/cart");
 
             setCartItems(response.data);
 
@@ -64,6 +58,34 @@ function Cart() {
 
             console.log(error);
             toast.error("Failed to remove item");
+
+        }
+
+    };
+
+    const handleCheckout = async () => {
+
+        setCheckingOut(true);
+
+        try {
+
+            const response = await api.post("/orders/checkout");
+
+            toast.success(response.data);
+
+            refreshCart();
+
+            navigate("/orders");
+
+        } catch (error) {
+
+            toast.error(
+                error.response?.data?.message || "Checkout failed"
+            );
+
+        } finally {
+
+            setCheckingOut(false);
 
         }
 
@@ -237,9 +259,11 @@ function Cart() {
 
                                 <button
                                     className="btn btn-success btn-lg rounded-pill px-5 mt-3"
+                                    onClick={handleCheckout}
+                                    disabled={checkingOut}
                                 >
 
-                                    Proceed to Checkout
+                                    {checkingOut ? "Placing Order..." : "Proceed to Checkout"}
 
                                 </button>
 

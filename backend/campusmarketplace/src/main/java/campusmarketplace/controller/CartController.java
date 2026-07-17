@@ -1,6 +1,7 @@
 package campusmarketplace.controller;
 
 import campusmarketplace.service.CartService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import campusmarketplace.dto.CartResponse;
 import java.util.List;
@@ -18,21 +19,25 @@ public class CartController {
         this.cartService = cartService;
     }
 
+    /**
+     * Identity comes from the validated JWT, never from a client-supplied
+     * param — otherwise anyone could read or modify another user's cart.
+     */
     @PostMapping("/{productId}")
     public String addToCart(
             @PathVariable UUID productId,
-            @RequestParam String email) {
+            Authentication authentication) {
 
         return cartService
-                .addToCart(productId, email);
+                .addToCart(productId, authentication.getName());
     }
 
     @GetMapping
     public List<CartResponse> getCart(
-            @RequestParam String email) {
+            Authentication authentication) {
 
         return cartService
-                .getCart(email);
+                .getCart(authentication.getName());
     }
 
     @DeleteMapping("/{id}")

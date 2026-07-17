@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import { getEmail } from "../services/auth";
 import { FaTag } from "react-icons/fa";
 import { toast } from "react-toastify";
 
@@ -26,12 +25,7 @@ function Orders() {
         try {
 
             const response = await api.get(
-                "/orders",
-                {
-                    params: {
-                        email: getEmail()
-                    }
-                }
+                "/orders"
             );
 
             setOrders(response.data);

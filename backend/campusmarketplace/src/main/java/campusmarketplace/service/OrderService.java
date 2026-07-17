@@ -9,19 +9,26 @@ import campusmarketplace.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import campusmarketplace.entity.Cart;
+import campusmarketplace.repository.CartRepository;
+import campusmarketplace.exception.BadRequestException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
 
     public OrderService(
             OrderRepository orderRepository,
-            ProductRepository productRepository) {
+            ProductRepository productRepository,
+            CartRepository cartRepository) {
 
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
+        this.cartRepository = cartRepository;
     }
 
     public String placeOrder(
@@ -119,5 +126,39 @@ public class OrderService {
         orderRepository.save(order);
 
         return "Status updated";
+    }
+
+    /**
+     * Converts the user's entire cart into orders, then empties the cart.
+     * 
+     * @Transactional means: if any step fails, the whole thing rolls back —
+     *                we never want orders created but the cart left full, or vice
+     *                versa.
+     */
+    @Transactional
+    public String checkout(String userEmail) {
+
+        List<Cart> cartItems = cartRepository.findByUserEmail(userEmail);
+
+        if (cartItems.isEmpty()) {
+            throw new BadRequestException("Your cart is empty");
+        }
+
+        for (Cart cart : cartItems) {
+
+            OrderEntity order = new OrderEntity();
+
+            order.setProductId(cart.getProductId());
+            order.setUserEmail(userEmail);
+            order.setQuantity(cart.getQuantity());
+            order.setStatus("PLACED");
+
+            orderRepository.save(order);
+        }
+
+        // Cart has been converted to orders — clear it.
+        cartRepository.deleteAll(cartItems);
+
+        return "Order placed successfully! " + cartItems.size() + " item(s) ordered.";
     }
 }

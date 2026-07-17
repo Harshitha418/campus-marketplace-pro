@@ -6,6 +6,7 @@ import campusmarketplace.dto.OrderResponse;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -22,21 +23,31 @@ public class OrderController {
     @PostMapping("/place")
     public String placeOrder(
             @RequestParam UUID productId,
-            @RequestParam String email,
-            @RequestParam Integer quantity) {
+            @RequestParam Integer quantity,
+            Authentication authentication) {
 
         return orderService.placeOrder(
                 productId,
-                email,
+                authentication.getName(),
                 quantity);
     }
 
     @GetMapping
     public List<OrderResponse> getOrders(
-            @RequestParam String email) {
+            Authentication authentication) {
 
         return orderService.getOrders(
-                email);
+                authentication.getName());
+    }
+
+    /**
+     * Identity comes from the JWT, not a request param — a user
+     * must only ever be able to check out their own cart.
+     */
+    @PostMapping("/checkout")
+    public String checkout(Authentication authentication) {
+
+        return orderService.checkout(authentication.getName());
     }
 
     @GetMapping("/all")

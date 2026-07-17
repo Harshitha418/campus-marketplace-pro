@@ -14,6 +14,8 @@ import AddProduct from "./pages/AddProduct";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SellerRoute from "./components/SellerRoute";
+import AdminRoute from "./components/AdminRoute";
+
 function App() {
 
     return (
@@ -36,7 +38,9 @@ function App() {
                     <Route path="/account" element={<Account />} />
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/orders" element={<Orders />} />
-                    <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/admin" element={
+                        <AdminRoute><AdminDashboard /></AdminRoute>
+                    } />
                     <Route path="/seller" element={
                         <SellerRoute><SellerDashboard /></SellerRoute>
                     } />
