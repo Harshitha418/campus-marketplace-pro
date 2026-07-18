@@ -69,18 +69,62 @@ function Cart() {
 
         try {
 
-            const response = await api.post("/orders/checkout");
+            // Step 1: ask our backend to create a Razorpay order for the cart total.
+            const orderRes = await api.post("/payment/create-order", null, {
+                params: { amount: total }
+            });
 
-            toast.success(response.data);
+            const { orderId, amount, currency, keyId } = orderRes.data;
 
-            refreshCart();
+            // Step 2: configure and open the Razorpay checkout popup.
+            const options = {
+                key: keyId,
+                amount: amount,
+                currency: currency,
+                order_id: orderId,
+                name: "Campus Marketplace",
+                description: "Order Payment",
 
-            navigate("/orders");
+                // Step 3 -> 4: this runs after the user pays successfully.
+                handler: async function (response) {
+
+                    try {
+
+                        // Send the payment proof back for signature verification.
+                        const verifyRes = await api.post("/payment/verify", {
+                            razorpayOrderId: response.razorpay_order_id,
+                            razorpayPaymentId: response.razorpay_payment_id,
+                            razorpaySignature: response.razorpay_signature
+                        });
+
+                        toast.success(verifyRes.data);
+
+                        refreshCart();
+
+                        navigate("/orders");
+
+                    } catch (err) {
+                        toast.error("Payment verification failed");
+                    }
+
+                },
+
+                theme: { color: "#198754" }
+            };
+
+            const razorpay = new window.Razorpay(options);
+
+            // If the user closes the popup without paying.
+            razorpay.on("payment.failed", function () {
+                toast.error("Payment failed. Please try again.");
+            });
+
+            razorpay.open();
 
         } catch (error) {
 
             toast.error(
-                error.response?.data?.message || "Checkout failed"
+                error.response?.data?.message || "Could not start payment"
             );
 
         } finally {
