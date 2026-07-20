@@ -4,6 +4,7 @@ import campusmarketplace.dto.CreateReviewRequest;
 import campusmarketplace.entity.Review;
 import campusmarketplace.service.ReviewService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 import java.util.UUID;
 import java.util.List;
 
@@ -22,10 +23,12 @@ public class ReviewController {
     @PostMapping("/{productId}")
     public String addReview(
             @PathVariable UUID productId,
-            @RequestBody CreateReviewRequest request) {
+            @RequestBody CreateReviewRequest request,
+            Authentication authentication) {
 
         return reviewService.addReview(
                 productId,
+                authentication.getName(),
                 request);
     }
 
@@ -35,5 +38,11 @@ public class ReviewController {
 
         return reviewService.getReviews(
                 productId);
+    }
+
+    @GetMapping("/summary")
+    public java.util.Map<String, java.util.Map<String, Object>> getRatingSummary() {
+
+        return reviewService.getRatingSummary();
     }
 }

@@ -47,6 +47,8 @@ public class SecurityConfig {
                                                 .permitAll()
                                                 .requestMatchers("/v3/api-docs/**")
                                                 .permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/reviews/**")
+                                                .permitAll()
                                                 // Anyone can browse/search products (read-only)
                                                 .requestMatchers(HttpMethod.GET, "/api/products/**")
                                                 .permitAll()

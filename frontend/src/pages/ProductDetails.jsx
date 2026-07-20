@@ -4,6 +4,7 @@ import api from "../services/api";
 import { FaHeart, FaShoppingCart, FaTag } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useCart } from "../context/CartContext";
+import Reviews from "../components/Reviews";
 
 function ProductDetails() {
 
@@ -188,7 +189,9 @@ return (
             </div>
 
         </div>
-
+        
+        <Reviews productId={product.id} />
+    
     </div>
 
 );

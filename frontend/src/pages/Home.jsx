@@ -12,15 +12,15 @@ function Home() {
     const [currentPage, setCurrentPage] = useState(1);
     const productsPerPage = 9;
     const [sortBy, setSortBy] = useState("default");
+    const [ratings, setRatings] = useState({});
 
     useEffect(() => {
         loadProducts();
+        loadRatings();
     }, []);
 
     // Debounce: wait until the user pauses typing for 400ms before
     // updating debouncedSearch (the value we actually filter/search with).
-    // Every keystroke resets the timer via the cleanup function, so only
-    // the last keystroke in a burst of typing survives.
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedSearch(search);
@@ -29,8 +29,7 @@ function Home() {
         return () => clearTimeout(timer);
     }, [search]);
 
-    // Whenever the search or category changes, jump back to page 1 —
-    // otherwise you could get stuck on page 5 of a now-empty filtered list.
+    // Whenever the search or category changes, jump back to page 1.
     useEffect(() => {
         setCurrentPage(1);
     }, [debouncedSearch, category, sortBy]);
@@ -41,16 +40,27 @@ function Home() {
 
             const response = await api.get("/products");
 
-            console.log(response.data);
-
             setProducts(response.data);
 
         } catch (error) {
 
-            console.log("ERROR");
             console.log(error);
             toast.error(error.message);
 
+        }
+
+    };
+
+    const loadRatings = async () => {
+
+        try {
+
+            const response = await api.get("/reviews/summary");
+
+            setRatings(response.data);
+
+        } catch (error) {
+            console.log(error);
         }
 
     };
@@ -172,6 +182,7 @@ function Home() {
 
                             <ProductCard
                                 product={product}
+                                rating={ratings[product.id]}
                             />
 
                         </div>

@@ -7,8 +7,6 @@ import lombok.Setter;
 @Setter
 public class CreateReviewRequest {
 
-    private String userEmail;
-
     private Integer rating;
 
     private String comment;

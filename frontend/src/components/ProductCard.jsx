@@ -1,10 +1,11 @@
-import { FaHeart, FaShoppingCart } from "react-icons/fa";
 import api from "../services/api";
 import { getEmail } from "../services/auth";
 import { Link } from "react-router-dom";
 import ProductImage from "./ProductImage";
 import { toast } from "react-toastify";
-function ProductCard({ product }) {
+import { FaHeart, FaShoppingCart, FaStar } from "react-icons/fa";
+
+function ProductCard({ product , rating}) {
 
     const addToWishlist = async () => {
 
@@ -83,9 +84,16 @@ function ProductCard({ product }) {
 
                 </Link>
 
-                <h3
-                    className="text-success fw-bold my-4"
-                >
+                {rating && rating.count > 0 ? (
+                    <div className="mb-2">
+                        <FaStar className="text-warning mb-1" /> {rating.average}
+                        <span className="text-muted small"> ({rating.count})</span>
+                    </div>
+                ) : (
+                    <div className="mb-2 text-muted small">No ratings yet</div>
+                )}
+
+                <h3 className="text-success fw-bold my-3">
 
                     ₹ {product.price}
 
