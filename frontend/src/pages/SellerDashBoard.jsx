@@ -55,6 +55,27 @@ function SellerDashboard() {
 
     };
 
+    const updateStock = async (product, newStock) => {
+
+        try {
+
+            await api.put(`/products/${product.id}`, {
+                title: product.title,
+                description: product.description,
+                price: product.price,
+                stock: parseInt(newStock)
+            });
+
+            toast.success("Stock updated");
+
+            loadMyProducts();
+
+        } catch (error) {
+            toast.error("Could not update stock");
+        }
+
+    };
+
     if (loading) {
         return (
             <div className="container py-5 text-center">
@@ -125,7 +146,21 @@ function SellerDashboard() {
 
                                 </div>
 
-                                <div className="card-footer bg-white border-0 d-flex gap-2">
+                                <div className="card-footer bg-white border-0">
+
+                                    <div className="d-flex align-items-center gap-2 mb-2">
+                                        <span className="small text-muted">Stock:</span>
+                                        <input
+                                            type="number"
+                                            className="form-control form-control-sm"
+                                            defaultValue={product.stock ?? 0}
+                                            onBlur={(e) => {
+                                                if (parseInt(e.target.value) !== product.stock) {
+                                                    updateStock(product, e.target.value);
+                                                }
+                                            }}
+                                        />
+                                    </div>
 
                                     <button
                                         className="btn btn-outline-danger btn-sm w-100"

@@ -28,5 +28,7 @@ public class Product implements Serializable {
 
     private String imageUrl;
 
+    private Integer stock = 0;
+
     private static final long serialVersionUID = 1L;
 }

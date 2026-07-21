@@ -12,7 +12,8 @@ function AddProduct() {
         description: "",
         price: "",
         category: "",
-        imageUrl: ""
+        imageUrl: "",
+        stock: ""
     });
 
     const [saving, setSaving] = useState(false);
@@ -32,7 +33,8 @@ function AddProduct() {
 
             await api.post("/products", {
                 ...form,
-                price: parseFloat(form.price)
+                price: parseFloat(form.price),
+                stock: parseInt(form.stock)
             });
 
             toast.success("Product listed successfully!");
@@ -105,6 +107,18 @@ function AddProduct() {
                                     value={form.price}
                                     onChange={handleChange}
                                     placeholder="499"
+                                />
+                            </div>
+
+                            <div className="mb-3">
+                                <label className="form-label">Stock Quantity *</label>
+                                <input
+                                    className="form-control"
+                                    name="stock"
+                                    type="number"
+                                    value={form.stock}
+                                    onChange={handleChange}
+                                    placeholder="10"
                                 />
                             </div>
 

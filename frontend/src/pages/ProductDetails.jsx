@@ -128,6 +128,16 @@ return (
 
                         </h2>
 
+                        {product.stock > 0 ? (
+                            <span className="badge bg-success-subtle text-success mb-3">
+                                In Stock: {product.stock} available
+                            </span>
+                        ) : (
+                            <span className="badge bg-danger-subtle text-danger mb-3">
+                                Out of Stock
+                            </span>
+                        )}
+
                         <hr />
 
                         <h5 className="fw-semibold">
@@ -172,11 +182,12 @@ return (
                             <button
                                 className="btn btn-success rounded-pill px-4"
                                 onClick={addToCart}
+                                disabled={product.stock <= 0}
                             >
 
                                 <FaShoppingCart className="me-2" />
 
-                                Add to Cart
+                                {product.stock <= 0 ? "Out of Stock" : "Add to Cart"}
 
                             </button>
 

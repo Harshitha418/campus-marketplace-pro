@@ -5,6 +5,7 @@ public class UpdateProductRequest {
     private String title;
     private String description;
     private Double price;
+    private Integer stock;
 
     public String getTitle() {
         return title;
@@ -28,5 +29,13 @@ public class UpdateProductRequest {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 }

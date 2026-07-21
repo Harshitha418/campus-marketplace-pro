@@ -14,6 +14,7 @@ public class CreateProductRequest {
     private String sellerEmail;
     private String category;
     private String imageUrl;
+    private Integer stock;
 
     public String getTitle() {
         return title;
@@ -62,4 +63,13 @@ public class CreateProductRequest {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
 }

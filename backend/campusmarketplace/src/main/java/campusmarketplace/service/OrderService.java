@@ -146,6 +146,21 @@ public class OrderService {
 
         for (Cart cart : cartItems) {
 
+            Product product = productRepository.findById(cart.getProductId())
+                    .orElseThrow(() -> new BadRequestException("Product no longer exists"));
+
+            Integer stock = product.getStock() == null ? 0 : product.getStock();
+
+            if (stock < cart.getQuantity()) {
+                throw new BadRequestException(
+                        "Not enough stock for '" + product.getTitle()
+                                + "'. Only " + stock + " left.");
+            }
+
+            // Decrement stock.
+            product.setStock(stock - cart.getQuantity());
+            productRepository.save(product);
+
             OrderEntity order = new OrderEntity();
 
             order.setProductId(cart.getProductId());

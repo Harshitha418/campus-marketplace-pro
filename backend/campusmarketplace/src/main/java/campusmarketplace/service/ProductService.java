@@ -52,6 +52,7 @@ public class ProductService {
                 product.setSellerEmail(requesterEmail);
                 product.setCategory(request.getCategory());
                 product.setImageUrl(request.getImageUrl());
+                product.setStock(request.getStock() == null ? 0 : request.getStock());
 
                 productRepository.save(product);
 
@@ -106,6 +107,9 @@ public class ProductService {
                 product.setTitle(request.getTitle());
                 product.setDescription(request.getDescription());
                 product.setPrice(request.getPrice());
+                if (request.getStock() != null) {
+                        product.setStock(request.getStock());
+                }
 
                 productRepository.save(product);
 
