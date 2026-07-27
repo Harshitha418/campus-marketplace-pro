@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../components/LoadingSpinner";
-import ProductImage from "../components/ProductImage";
-
-const STATUSES = ["PLACED", "SHIPPED", "DELIVERED", "CANCELLED"];
+import { FaUser, FaBoxOpen, FaChevronRight } from "react-icons/fa";
 
 function AdminDashboard() {
 
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState("ALL");
+    const navigate = useNavigate();
 
     useEffect(() => {
         loadOrders();
@@ -21,68 +20,33 @@ function AdminDashboard() {
         setLoading(true);
 
         try {
-
             const response = await api.get("/orders/all");
-
             setOrders(response.data);
-
         } catch (error) {
-
             toast.error("Failed to load orders");
-
         } finally {
-
             setLoading(false);
-
         }
 
     };
 
-    const updateStatus = async (id, status) => {
-
-        try {
-
-            await api.put(`/orders/${id}`, null, {
-                params: { status }
-            });
-
-            toast.success(`Order marked ${status}`);
-
-            loadOrders();
-
-        } catch (error) {
-
-            toast.error(
-                error.response?.data?.message || "Failed to update status"
-            );
-
-        }
-
-    };
-
-    const getStatusBadge = (status) => {
-
-        switch (status) {
-            case "PLACED":
-                return "bg-warning text-dark";
-            case "SHIPPED":
-                return "bg-primary";
-            case "DELIVERED":
-                return "bg-success";
-            case "CANCELLED":
-                return "bg-danger";
-            default:
-                return "bg-secondary";
-        }
-
-    };
-
-    const filteredOrders = filter === "ALL"
-        ? orders
-        : orders.filter((o) => o.status === filter);
+    // Build one summary row per buyer: email, active count, total count.
+    const summary = Object.values(
+        orders.reduce((acc, o) => {
+            const email = o.userEmail || "Unknown";
+            if (!acc[email]) {
+                acc[email] = { email, total: 0, active: 0 };
+            }
+            acc[email].total += 1;
+            if (o.status !== "DELIVERED" && o.status !== "CANCELLED") {
+                acc[email].active += 1;
+            }
+            return acc;
+        }, {})
+    ).sort((a, b) => b.active - a.active);
 
     if (loading) {
-        return <LoadingSpinner message="Loading all orders..." />;
+        return <LoadingSpinner message="Loading buyers..." />;
     }
 
     return (
@@ -91,97 +55,57 @@ function AdminDashboard() {
 
             <h2 className="fw-bold mb-1">Admin Dashboard</h2>
             <p className="text-muted mb-4">
-                Managing {orders.length} order(s) across all users
+                {summary.length} buyer(s) &middot; {orders.length} total order(s)
             </p>
 
-            {/* Status filter */}
-            <div className="d-flex flex-wrap gap-2 mb-4">
-
-                <button
-                    className={`btn btn-sm ${
-                        filter === "ALL" ? "btn-dark" : "btn-outline-dark"
-                    }`}
-                    onClick={() => setFilter("ALL")}
-                >
-                    All ({orders.length})
-                </button>
-
-                {STATUSES.map((s) => (
-                    <button
-                        key={s}
-                        className={`btn btn-sm ${
-                            filter === s ? "btn-primary" : "btn-outline-primary"
-                        }`}
-                        onClick={() => setFilter(s)}
-                    >
-                        {s} ({orders.filter((o) => o.status === s).length})
-                    </button>
-                ))}
-
-            </div>
-
-            {filteredOrders.length === 0 ? (
+            {summary.length === 0 ? (
 
                 <div className="card border-0 shadow-sm rounded-4">
                     <div className="card-body text-center py-5">
-                        <h5 className="text-muted">No orders in this category</h5>
+                        <h5 className="text-muted">No orders yet</h5>
                     </div>
                 </div>
 
             ) : (
 
-                filteredOrders.map((order) => (
+                <div className="row">
 
-                    <div key={order.id} className="card border-0 shadow rounded-4 mb-3">
+                    {summary.map((buyer) => (
 
-                        <div className="card-body">
+                        <div key={buyer.email} className="col-lg-4 col-md-6 mb-4">
 
-                            <div className="row align-items-center">
+                            <div
+                                className="card border-0 shadow-sm rounded-4 h-100"
+                                style={{ cursor: "pointer", transition: "transform .15s, box-shadow .15s" }}
+                                onClick={() => navigate(`/admin/user/${encodeURIComponent(buyer.email)}`)}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = "translateY(-4px)";
+                                    e.currentTarget.style.boxShadow = "0 .5rem 1.5rem rgba(0,0,0,.12)";
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = "";
+                                    e.currentTarget.style.boxShadow = "";
+                                }}
+                            >
 
-                                <div className="col-md-2 text-center">
-                                    <ProductImage
-                                        title={order.title}
-                                        imageUrl={order.imageUrl}
-                                    />
-                                </div>
+                                <div className="card-body d-flex align-items-center">
 
-                                <div className="col-md-5">
-
-                                    <h6 className="fw-bold mb-1">{order.title}</h6>
-
-                                    <p className="text-muted small mb-2">
-                                        Order #{order.id} &middot; Qty: {order.quantity}
-                                    </p>
-
-                                    <h6 className="text-success fw-bold mb-0">
-                                        ₹ {(order.price * order.quantity).toFixed(2)}
-                                    </h6>
-
-                                </div>
-
-                                <div className="col-md-2 text-center">
-                                    <span
-                                        className={`badge ${getStatusBadge(order.status)} px-3 py-2`}
+                                    <div
+                                        className="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center me-3"
+                                        style={{ width: "48px", height: "48px", flexShrink: 0 }}
                                     >
-                                        {order.status}
-                                    </span>
-                                </div>
+                                        <FaUser />
+                                    </div>
 
-                                <div className="col-md-3">
+                                    <div className="flex-grow-1 text-truncate">
+                                        <h6 className="fw-bold mb-1 text-truncate">{buyer.email}</h6>
+                                        <span className="text-muted small">
+                                            <FaBoxOpen className="me-1" />
+                                            {buyer.active} active &middot; {buyer.total} total
+                                        </span>
+                                    </div>
 
-                                    <select
-                                        className="form-select form-select-sm"
-                                        value={order.status}
-                                        onChange={(e) =>
-                                            updateStatus(order.id, e.target.value)
-                                        }
-                                    >
-                                        {STATUSES.map((s) => (
-                                            <option key={s} value={s}>
-                                                {s}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <FaChevronRight className="text-muted ms-2" />
 
                                 </div>
 
@@ -189,9 +113,9 @@ function AdminDashboard() {
 
                         </div>
 
-                    </div>
+                    ))}
 
-                ))
+                </div>
 
             )}
 

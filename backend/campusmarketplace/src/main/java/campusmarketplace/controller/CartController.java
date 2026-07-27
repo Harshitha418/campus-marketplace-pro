@@ -40,11 +40,22 @@ public class CartController {
                 .getCart(authentication.getName());
     }
 
-    @DeleteMapping("/{id}")
-    public String removeCart(
-            @PathVariable Long id) {
+    @PutMapping("/{id}")
+    public String updateQuantity(
+            @PathVariable Long id,
+            @RequestParam Integer quantity,
+            Authentication authentication) {
 
         return cartService
-                .removeFromCart(id);
+                .updateQuantity(id, quantity, authentication.getName());
+    }
+
+    @DeleteMapping("/{id}")
+    public String removeCart(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        return cartService
+                .removeFromCart(id, authentication.getName());
     }
 }

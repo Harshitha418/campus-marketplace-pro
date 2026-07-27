@@ -1,51 +1,159 @@
-body{
+/* ============================================================
+   Campus Marketplace — Dark Indigo Theme
+   Single global stylesheet: restyles the whole app at once.
+   ============================================================ */
 
-    background:#f5f7fa;
-
-    font-family:Arial,Helvetica,sans-serif;
-
+:root {
+    --bg:            #0f1420;   /* page background        */
+    --surface:       #1a2130;   /* cards, navbar          */
+    --surface-2:     #232c3d;   /* inputs, hover states   */
+    --border:        #2c3546;   /* subtle borders         */
+    --text:          #e6eaf2;   /* primary text           */
+    --text-muted:    #97a3b8;   /* secondary text         */
+    --primary:       #6366f1;   /* indigo accent          */
+    --primary-2:     #818cf8;   /* lighter indigo         */
+    --success:       #22c55e;
+    --danger:        #ef4444;
+    --warning:       #f59e0b;
 }
 
-.card{
-
-    transition:0.3s ease;
-
+/* ---------- Base ---------- */
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    min-height: 100vh;
 }
 
-.card:hover{
+/* fix Bootstrap's default dark text so it stays readable on dark bg */
+.text-dark { color: var(--text) !important; }
+.text-muted { color: var(--text-muted) !important; }
+.bg-white { background: var(--surface) !important; color: var(--text) !important; }
 
-    transform:translateY(-6px);
+h1, h2, h3, h4, h5, h6 { color: var(--text); font-weight: 700; }
+a { color: var(--primary-2); text-decoration: none; }
+a:hover { color: var(--primary); }
 
-    box-shadow:0 12px 28px rgba(0,0,0,.15)!important;
+/* ---------- Cards ---------- */
+.card {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border) !important;
+    border-radius: 16px !important;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,.45) !important;
+    border-color: var(--primary) !important;
+}
+.card-footer, .card-header { background: transparent; border-color: var(--border); }
 
+/* ---------- Navbar ---------- */
+.navbar {
+    background: var(--surface) !important;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 16px rgba(0,0,0,.35);
+}
+.navbar-brand {
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--primary-2), #a5b4fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.btn{
+/* ---------- Buttons ---------- */
+.btn { border-radius: 10px; font-weight: 600; transition: transform .18s ease, filter .18s ease, box-shadow .18s ease; }
+.btn:hover { transform: translateY(-2px); }
 
-    transition:.2s;
+.btn-primary, .btn-dark {
+    background: linear-gradient(135deg, var(--primary), #4f46e5);
+    border: none;
+    box-shadow: 0 4px 14px rgba(99,102,241,.35);
+}
+.btn-primary:hover, .btn-dark:hover { filter: brightness(1.1); box-shadow: 0 6px 20px rgba(99,102,241,.5); }
 
+.btn-success { background: linear-gradient(135deg, #22c55e, #16a34a); border: none; box-shadow: 0 4px 14px rgba(34,197,94,.3); }
+.btn-success:hover { filter: brightness(1.1); }
+
+.btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); border: none; color: #1a1400; }
+
+.btn-outline-dark, .btn-outline-light, .btn-outline-secondary {
+    color: var(--text); border: 1px solid var(--border); background: transparent;
+}
+.btn-outline-dark:hover, .btn-outline-light:hover, .btn-outline-secondary:hover {
+    background: var(--surface-2); color: var(--text); border-color: var(--primary);
+}
+.btn-outline-primary { color: var(--primary-2); border: 1px solid var(--primary); }
+.btn-outline-primary:hover { background: var(--primary); color: #fff; }
+.btn-outline-danger { color: var(--danger); border: 1px solid var(--danger); }
+.btn-outline-danger:hover { background: var(--danger); color: #fff; }
+
+/* ---------- Forms ---------- */
+.form-control, .form-select {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 10px 14px;
+}
+.form-control:focus, .form-select:focus {
+    background: var(--surface-2);
+    color: var(--text);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 .2rem rgba(99,102,241,.25);
+}
+.form-control::placeholder { color: var(--text-muted); }
+.form-select option { background: var(--surface); color: var(--text); }
+.form-label { color: var(--text-muted); font-weight: 600; font-size: .9rem; }
+
+/* ---------- Dropdown (navbar hamburger) ---------- */
+.dropdown-menu {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0,0,0,.5);
+}
+.dropdown-item { color: var(--text); border-radius: 8px; padding: 8px 12px; }
+.dropdown-item:hover { background: var(--surface-2); color: var(--primary-2); }
+.dropdown-divider { border-color: var(--border); }
+
+/* ---------- Badges ---------- */
+.badge.bg-primary { background: var(--primary) !important; }
+.badge.bg-dark { background: var(--surface-2) !important; color: var(--text) !important; }
+
+/* ---------- Tables ---------- */
+.table { color: var(--text); }
+.table > :not(caption) > * > * { background: transparent; color: var(--text); border-color: var(--border); }
+
+/* ---------- Hero (home page heading area) ---------- */
+.container > .text-center h1.display-5,
+.display-5 {
+    font-weight: 800;
+    background: linear-gradient(90deg, #a5b4fc, var(--primary), #c4b5fd);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.btn:hover{
-
-    transform:translateY(-2px);
-
+/* ---------- Product images sit on a light plate so they don't get lost ---------- */
+.card img {
+    background: #f8fafc;
+    border-radius: 12px;
 }
 
-.navbar{
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-    box-shadow:0 2px 12px rgba(0,0,0,.12);
+/* ---------- Spinner ---------- */
+.spinner-border { color: var(--primary) !important; }
 
-}
+/* ---------- Footer ---------- */
+footer { flex-shrink: 0; background: var(--surface); color: var(--text-muted); border-top: 1px solid var(--border); }
 
-.form-control{
-
-    border-radius:12px;
-
-}
-
-footer{
-
-    flex-shrink:0;
-
-}
+/* ---------- Toast tweaks ---------- */
+.Toastify__toast { border-radius: 12px; }

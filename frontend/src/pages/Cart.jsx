@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import { FaTrash, FaTag } from "react-icons/fa";
+import { FaTrash, FaTag, FaPlus, FaMinus } from "react-icons/fa";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../components/LoadingSpinner";
 import EmptyState from "../components/EmptyState";
@@ -43,6 +43,26 @@ function Cart() {
 
     };
 
+    const changeQuantity = async (id, newQuantity) => {
+
+        try {
+
+            await api.put(`/cart/${id}`, null, {
+                params: { quantity: newQuantity }
+            });
+
+            loadCart();
+            refreshCart();
+
+        } catch (error) {
+
+            console.log(error);
+            toast.error("Could not update quantity");
+
+        }
+
+    };
+
     const removeItem = async (id) => {
 
         try {
@@ -62,6 +82,11 @@ function Cart() {
         }
 
     };
+
+    const total = cartItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+    );
 
     const handleCheckout = async () => {
 
@@ -85,12 +110,11 @@ function Cart() {
                 name: "Campus Marketplace",
                 description: "Order Payment",
 
-                // Step 3 -> 4: this runs after the user pays successfully.
+                // Step 3 -> 4: runs after the user pays successfully.
                 handler: async function (response) {
 
                     try {
 
-                        // Send the payment proof back for signature verification.
                         const verifyRes = await api.post("/payment/verify", {
                             razorpayOrderId: response.razorpay_order_id,
                             razorpayPaymentId: response.razorpay_payment_id,
@@ -114,7 +138,6 @@ function Cart() {
 
             const razorpay = new window.Razorpay(options);
 
-            // If the user closes the popup without paying.
             razorpay.on("payment.failed", function () {
                 toast.error("Payment failed. Please try again.");
             });
@@ -135,22 +158,17 @@ function Cart() {
 
     };
 
-    const total = cartItems.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-    );
-
     if (loading) {
 
-    return (
+        return (
 
-        <LoadingSpinner
-            message="Loading your cart..."
-        />
+            <LoadingSpinner
+                message="Loading your cart..."
+            />
 
-    );
+        );
 
-}
+    }
 
     return (
 
@@ -168,17 +186,17 @@ function Cart() {
 
                     <EmptyState
 
-    icon="🛒"
+                        icon="🛒"
 
-    title="Your cart is empty"
+                        title="Your cart is empty"
 
-    message="Browse products and add something!"
+                        message="Browse products and add something!"
 
-    buttonText="Continue Shopping"
+                        buttonText="Continue Shopping"
 
-    buttonLink="/"
+                        buttonLink="/"
 
-/>
+                    />
 
                     :
 
@@ -206,7 +224,7 @@ function Cart() {
 
                                             </div>
 
-                                            <div className="col-md-7">
+                                            <div className="col-md-6">
 
                                                 <h4 className="fw-bold">
 
@@ -230,7 +248,7 @@ function Cart() {
 
                                             </div>
 
-                                            <div className="col-md-3 text-end">
+                                            <div className="col-md-4 text-end">
 
                                                 <h4 className="text-success fw-bold">
 
@@ -238,19 +256,31 @@ function Cart() {
 
                                                 </h4>
 
-                                                <p>
+                                                <div className="d-flex align-items-center justify-content-end gap-2 my-3">
 
-                                                    Quantity
+                                                    <button
+                                                        className="btn btn-outline-dark btn-sm rounded-circle"
+                                                        onClick={() => changeQuantity(item.id, item.quantity - 1)}
+                                                        title="Decrease"
+                                                    >
+                                                        <FaMinus />
+                                                    </button>
 
-                                                    <span className="badge bg-dark ms-2">
-
+                                                    <span className="fw-bold fs-5" style={{ minWidth: "32px" }}>
                                                         {item.quantity}
-
                                                     </span>
 
-                                                </p>
+                                                    <button
+                                                        className="btn btn-outline-dark btn-sm rounded-circle"
+                                                        onClick={() => changeQuantity(item.id, item.quantity + 1)}
+                                                        title="Increase"
+                                                    >
+                                                        <FaPlus />
+                                                    </button>
 
-                                                <h6 className="text-muted">
+                                                </div>
+
+                                                <h6 className="text-muted mb-0">
 
                                                     Subtotal
 
@@ -307,7 +337,7 @@ function Cart() {
                                     disabled={checkingOut}
                                 >
 
-                                    {checkingOut ? "Placing Order..." : "Proceed to Checkout"}
+                                    {checkingOut ? "Processing..." : "Proceed to Checkout"}
 
                                 </button>
 

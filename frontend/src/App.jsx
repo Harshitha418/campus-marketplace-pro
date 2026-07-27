@@ -15,6 +15,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SellerRoute from "./components/SellerRoute";
 import AdminRoute from "./components/AdminRoute";
+import AdminUserOrders from "./pages/AdminUserOrders";
 
 function App() {
 
@@ -46,6 +47,9 @@ function App() {
                     } />
                     <Route path="/add-product" element={
                         <SellerRoute><AddProduct /></SellerRoute>
+                    } />
+                    <Route path="/admin/user/:email" element={
+                        <AdminRoute><AdminUserOrders /></AdminRoute>
                     } />
                 </Routes>
 

@@ -46,11 +46,7 @@ public class JwtAuthenticationFilter
                         boolean valid = jwtService.validateToken(token);
                         logger.debug("JWT valid: {}", valid);
                         if (!valid) {
-                                response.setStatus(
-                                                HttpServletResponse.SC_UNAUTHORIZED);
-                                response.getWriter()
-                                                .write("Invalid JWT Token");
-
+                                filterChain.doFilter(request, response);
                                 return;
                         }
                         String email = jwtService.extractEmail(token);

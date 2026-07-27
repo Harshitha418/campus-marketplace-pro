@@ -71,6 +71,7 @@ public class OrderService {
                 dto.setCategory(product.getCategory());
                 dto.setQuantity(order.getQuantity());
                 dto.setStatus(order.getStatus());
+                dto.setUserEmail(order.getUserEmail());
                 dto.setImageUrl(product.getImageUrl());
                 response.add(dto);
             }
@@ -102,6 +103,7 @@ public class OrderService {
                 dto.setCategory(product.getCategory());
                 dto.setQuantity(order.getQuantity());
                 dto.setStatus(order.getStatus());
+                dto.setUserEmail(order.getUserEmail());
                 dto.setImageUrl(product.getImageUrl());
                 response.add(dto);
             }

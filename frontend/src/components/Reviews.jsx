@@ -78,7 +78,7 @@ function Reviews({ productId }) {
                 {/* Write a review (only if logged in) */}
                 {isLoggedIn() && (
 
-                    <div className="border rounded-3 p-3 mb-4 bg-light">
+                    <div className="border rounded-3 p-3 mb-4" style={{ background: "var(--surface-2)" }}>
 
                         <p className="fw-semibold mb-2">Write a review</p>
 

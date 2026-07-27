@@ -12,6 +12,7 @@ public class OrderResponse {
     private String category;
     private Integer quantity;
     private String status;
+    private String userEmail;
     private String imageUrl;
 
     public Long getId() {
@@ -84,6 +85,14 @@ public class OrderResponse {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
 }
