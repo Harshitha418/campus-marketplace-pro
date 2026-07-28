@@ -9,6 +9,7 @@ import campusmarketplace.dto.CreateProductRequest;
 import campusmarketplace.dto.RecommendationResponse;
 import campusmarketplace.dto.UpdateProductRequest;
 import campusmarketplace.entity.OrderEntity;
+import campusmarketplace.entity.OrderItem;
 import campusmarketplace.entity.Product;
 import campusmarketplace.repository.OrderRepository;
 import campusmarketplace.repository.ProductRepository;
@@ -22,21 +23,26 @@ import org.springframework.stereotype.Service;
 import campusmarketplace.strategy.SortStrategyFactory;
 import campusmarketplace.strategy.ProductSortStrategy;
 import java.util.UUID;
+import campusmarketplace.entity.OrderItem;
+import campusmarketplace.repository.OrderItemRepository;
 
 @Service
 public class ProductService {
 
         private final ProductRepository productRepository;
         private final OrderRepository orderRepository;
+        private final OrderItemRepository orderItemRepository;
         private final SortStrategyFactory sortStrategyFactory;
 
         public ProductService(
                         ProductRepository productRepository,
                         OrderRepository orderRepository,
+                        OrderItemRepository orderItemRepository,
                         SortStrategyFactory sortStrategyFactory) {
 
                 this.productRepository = productRepository;
                 this.orderRepository = orderRepository;
+                this.orderItemRepository = orderItemRepository;
                 this.sortStrategyFactory = sortStrategyFactory;
         }
 
@@ -163,18 +169,21 @@ public class ProductService {
 
         public List<RecommendationResponse> getRecommendations(String email) {
 
-                List<OrderEntity> orders = orderRepository.findByUserEmail(email);
+                List<OrderEntity> orders = orderRepository.findByUserEmailOrderByCreatedAtDesc(email);
 
                 Set<String> categories = new HashSet<>();
 
                 for (OrderEntity order : orders) {
 
-                        Product product = productRepository
-                                        .findById(order.getProductId())
-                                        .orElse(null);
+                        for (OrderItem item : orderItemRepository.findByOrderId(order.getId())) {
 
-                        if (product != null) {
-                                categories.add(product.getCategory());
+                                Product product = productRepository
+                                                .findById(item.getProductId())
+                                                .orElse(null);
+
+                                if (product != null) {
+                                        categories.add(product.getCategory());
+                                }
                         }
                 }
 

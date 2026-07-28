@@ -53,8 +53,10 @@ public class PaymentController {
         if (!valid) {
             return "Payment verification failed";
         }
-
-        // Signature is genuine -> now actually place the order.
-        return orderService.checkout(authentication.getName());
+        // Signature is genuine -> place the order, storing the payment id
+        // as the transaction reference for the bill.
+        return orderService.checkout(
+                authentication.getName(),
+                request.getRazorpayPaymentId());
     }
 }

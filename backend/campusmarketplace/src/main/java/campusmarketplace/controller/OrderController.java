@@ -1,12 +1,13 @@
 package campusmarketplace.controller;
 
+import campusmarketplace.dto.OrderSummaryResponse;
+import campusmarketplace.dto.OrderDetailResponse;
 import campusmarketplace.service.OrderService;
-import org.springframework.web.bind.annotation.*;
-import campusmarketplace.dto.OrderResponse;
-import java.util.List;
-import java.util.UUID;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -14,56 +15,35 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    public OrderController(
-            OrderService orderService) {
-
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
-    @PostMapping("/place")
-    public String placeOrder(
-            @RequestParam UUID productId,
-            @RequestParam Integer quantity,
-            Authentication authentication) {
-
-        return orderService.placeOrder(
-                productId,
-                authentication.getName(),
-                quantity);
-    }
-
+    /** The logged-in user's orders as summary rows (newest first). */
     @GetMapping
-    public List<OrderResponse> getOrders(
-            Authentication authentication) {
-
-        return orderService.getOrders(
-                authentication.getName());
+    public List<OrderSummaryResponse> getMyOrders(Authentication authentication) {
+        return orderService.getMyOrders(authentication.getName());
     }
 
-    /**
-     * Identity comes from the JWT, not a request param — a user
-     * must only ever be able to check out their own cart.
-     */
-    @PostMapping("/checkout")
-    public String checkout(Authentication authentication) {
-
-        return orderService.checkout(authentication.getName());
+    /** Full detail of one order. */
+    @GetMapping("/{orderId}")
+    public OrderDetailResponse getOrderDetail(@PathVariable Long orderId) {
+        return orderService.getOrderDetail(orderId);
     }
 
+    /** Admin: all orders as summary rows. */
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<OrderResponse> getAllOrders() {
-
-        return orderService.getAllOrders();
+    public List<OrderSummaryResponse> getAllOrders() {
+        return orderService.getAllOrderSummaries();
     }
 
+    /** Admin: update the status of a single line item. */
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
-    public String updateStatus(
-            @PathVariable Long id,
+    @PutMapping("/item/{itemId}")
+    public String updateItemStatus(
+            @PathVariable Long itemId,
             @RequestParam String status) {
-
-        return orderService
-                .updateStatus(id, status);
+        return orderService.updateItemStatus(itemId, status);
     }
 }

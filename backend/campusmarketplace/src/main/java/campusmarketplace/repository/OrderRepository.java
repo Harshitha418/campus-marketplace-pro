@@ -8,22 +8,25 @@ import java.util.List;
 public interface OrderRepository
                 extends JpaRepository<OrderEntity, Long> {
 
-        List<OrderEntity> findByUserEmail(
-                        String userEmail);
+        // A user's orders, newest first.
+        List<OrderEntity> findByUserEmailOrderByCreatedAtDesc(String userEmail);
+
+        // All orders, newest first (admin view).
+        List<OrderEntity> findAllByOrderByCreatedAtDesc();
 
         long count();
 
+        // Revenue is now the sum of each order's total.
         @Query("""
-                        SELECT COALESCE(SUM(o.quantity * p.price),0)
+                        SELECT COALESCE(SUM(o.totalAmount), 0)
                         FROM OrderEntity o
-                        JOIN Product p
-                        ON o.productId = p.id
-                                """)
+                        """)
         Double getTotalRevenue();
 
+        // Total units sold now comes from the order items.
         @Query("""
-                        SELECT COALESCE(SUM(o.quantity),0)
-                        FROM OrderEntity o
+                        SELECT COALESCE(SUM(i.quantity), 0)
+                        FROM OrderItem i
                         """)
         Integer getTotalQuantitySold();
 }
