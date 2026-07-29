@@ -34,6 +34,30 @@ function OrderDetails() {
 
     };
 
+    const downloadBill = async () => {
+
+        try {
+
+            const response = await api.get(`/orders/${orderId}/bill`, {
+                responseType: "blob"
+            });
+
+            // Turn the PDF blob into a temporary download link and click it.
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", `bill-order-${orderId}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+            toast.error("Could not download bill");
+        }
+
+    };
+
     const statusBadge = (status) => {
         switch (status) {
             case "PLACED": return "bg-warning text-dark";
@@ -52,6 +76,8 @@ function OrderDetails() {
 
     if (loading) return <LoadingSpinner message="Loading order..." />;
     if (!order) return null;
+
+
 
     return (
 
@@ -85,6 +111,13 @@ function OrderDetails() {
                         </div>
 
                     </div>
+
+                    <button
+                        className="btn btn-outline-primary btn-sm mt-3"
+                        onClick={downloadBill}
+                    >
+                        📄 Download Bill
+                    </button>
 
                 </div>
             </div>
@@ -128,9 +161,7 @@ function OrderDetails() {
             ))}
 
         </div>
-
     );
-
 }
 
 export default OrderDetails;

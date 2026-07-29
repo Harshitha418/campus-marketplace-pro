@@ -95,7 +95,7 @@ function Orders() {
 
                         <tbody>
 
-                            {orders.map((order) => (
+                            {orders.map((order,index) => (
 
                                 <tr
                                     key={order.orderId}
@@ -104,7 +104,7 @@ function Orders() {
                                 >
 
                                     <td className="px-4 py-3 fw-semibold">
-                                        #{order.orderId}
+                                        #{orders.length - index}
                                     </td>
 
                                     <td className="py-3">

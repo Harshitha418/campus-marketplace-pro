@@ -6,7 +6,10 @@ import campusmarketplace.service.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
+import campusmarketplace.service.BillService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @RestController
@@ -14,9 +17,11 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final BillService billService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, BillService billService) {
         this.orderService = orderService;
+        this.billService = billService;
     }
 
     /** The logged-in user's orders as summary rows (newest first). */
@@ -45,5 +50,18 @@ public class OrderController {
             @PathVariable Long itemId,
             @RequestParam String status) {
         return orderService.updateItemStatus(itemId, status);
+    }
+
+    /** Download a PDF bill for one order. */
+    @GetMapping("/{orderId}/bill")
+    public ResponseEntity<byte[]> downloadBill(@PathVariable Long orderId) {
+
+        byte[] pdf = billService.generateBill(orderId);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=bill-order-" + orderId + ".pdf")
+                .body(pdf);
     }
 }

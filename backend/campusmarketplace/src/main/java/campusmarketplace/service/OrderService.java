@@ -28,17 +28,20 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
+    private final EmailService emailService;
 
     public OrderService(
             OrderRepository orderRepository,
             OrderItemRepository orderItemRepository,
             ProductRepository productRepository,
-            CartRepository cartRepository) {
+            CartRepository cartRepository,
+            EmailService emailService) {
 
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.productRepository = productRepository;
         this.cartRepository = cartRepository;
+        this.emailService = emailService;
     }
 
     /**
@@ -98,6 +101,9 @@ public class OrderService {
 
         // 4. Empty the cart.
         cartRepository.deleteAll(cartItems);
+
+        // 5. Send confirmation email.
+        emailService.sendOrderConfirmation(userEmail, order.getId(), total, cartItems.size());
 
         return "Order placed successfully! " + cartItems.size() + " item(s) ordered.";
     }
