@@ -15,8 +15,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SellerRoute from "./components/SellerRoute";
 import AdminRoute from "./components/AdminRoute";
-import AdminUserOrders from "./pages/AdminUserOrders";
 import OrderDetails from "./pages/OrderDetails";
+import AdminOrderDetail from "./pages/AdminOrderDetail";
 
 function App() {
 
@@ -49,8 +49,8 @@ function App() {
                     <Route path="/add-product" element={
                         <SellerRoute><AddProduct /></SellerRoute>
                     } />
-                    <Route path="/admin/user/:email" element={
-                        <AdminRoute><AdminUserOrders /></AdminRoute>
+                    <Route path="/admin/order/:orderId" element={
+                        <AdminRoute><AdminOrderDetail /></AdminRoute>
                     } />
                     <Route path="/orders/:orderId" element={<OrderDetails />} />
                 </Routes>
