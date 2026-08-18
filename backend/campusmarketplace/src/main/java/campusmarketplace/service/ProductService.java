@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import campusmarketplace.strategy.SortStrategyFactory;
 import campusmarketplace.strategy.ProductSortStrategy;
 import java.util.UUID;
-import campusmarketplace.entity.OrderItem;
 import campusmarketplace.repository.OrderItemRepository;
 
 @Service

@@ -32,8 +32,14 @@ public class OrderController {
 
     /** Full detail of one order. */
     @GetMapping("/{orderId}")
-    public OrderDetailResponse getOrderDetail(@PathVariable Long orderId) {
-        return orderService.getOrderDetail(orderId);
+    public OrderDetailResponse getOrderDetail(
+            @PathVariable Long orderId,
+            Authentication authentication) {
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        return orderService.getOrderDetail(orderId, authentication.getName(), isAdmin);
     }
 
     /** Admin: all orders as summary rows. */
@@ -54,9 +60,14 @@ public class OrderController {
 
     /** Download a PDF bill for one order. */
     @GetMapping("/{orderId}/bill")
-    public ResponseEntity<byte[]> downloadBill(@PathVariable Long orderId) {
+    public ResponseEntity<byte[]> downloadBill(
+            @PathVariable Long orderId,
+            Authentication authentication) {
 
-        byte[] pdf = billService.generateBill(orderId);
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        byte[] pdf = billService.generateBill(orderId, authentication.getName(), isAdmin);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)

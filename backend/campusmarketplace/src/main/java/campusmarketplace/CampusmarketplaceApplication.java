@@ -11,5 +11,4 @@ public class CampusmarketplaceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CampusmarketplaceApplication.class, args);
 	}
-
 }

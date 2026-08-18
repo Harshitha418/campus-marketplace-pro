@@ -23,10 +23,20 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    private static final java.util.Set<String> ALLOWED_SELF_REGISTER_ROLES = java.util.Set.of("BUYER", "SELLER");
+
     public String register(RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("Email already exists");
+        }
+
+        String requestedRole = request.getRole() == null
+                ? ""
+                : request.getRole().trim().toUpperCase();
+
+        if (!ALLOWED_SELF_REGISTER_ROLES.contains(requestedRole)) {
+            throw new BadRequestException("Role must be one of: " + ALLOWED_SELF_REGISTER_ROLES);
         }
 
         User user = new User();
@@ -34,7 +44,7 @@ public class AuthService {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(request.getRole());
+        user.setRole(requestedRole);
 
         userRepository.save(user);
 

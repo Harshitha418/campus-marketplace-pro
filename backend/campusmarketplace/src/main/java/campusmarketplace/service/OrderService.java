@@ -14,8 +14,6 @@ import campusmarketplace.exception.BadRequestException;
 import campusmarketplace.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import campusmarketplace.dto.OrderSummaryResponse;
-import campusmarketplace.dto.OrderDetailResponse;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -137,10 +135,14 @@ public class OrderService {
     }
 
     /** Full detail of one order, including its line items. */
-    public OrderDetailResponse getOrderDetail(Long orderId) {
+    public OrderDetailResponse getOrderDetail(Long orderId, String requesterEmail, boolean isAdmin) {
 
         OrderEntity order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        if (!isAdmin && !order.getUserEmail().equalsIgnoreCase(requesterEmail)) {
+            throw new BadRequestException("You do not have access to this order");
+        }
 
         OrderDetailResponse dto = new OrderDetailResponse();
         dto.setOrderId(order.getId());

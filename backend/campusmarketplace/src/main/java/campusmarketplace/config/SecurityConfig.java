@@ -49,16 +49,16 @@ public class SecurityConfig {
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/reviews/**")
                                                 .permitAll()
-                                                // Anyone can browse/search products (read-only)
                                                 .requestMatchers(HttpMethod.GET, "/api/products/**")
                                                 .permitAll()
-                                                // Creating, editing, deleting a product requires a valid JWT
                                                 .requestMatchers(HttpMethod.POST, "/api/products/**")
                                                 .authenticated()
                                                 .requestMatchers(HttpMethod.PUT, "/api/products/**")
                                                 .authenticated()
                                                 .requestMatchers(HttpMethod.DELETE, "/api/products/**")
                                                 .authenticated()
+                                                .requestMatchers("/api/admin/**")
+                                                .hasRole("ADMIN")
                                                 .anyRequest()
                                                 .authenticated())
                                 .httpBasic(Customizer.withDefaults());

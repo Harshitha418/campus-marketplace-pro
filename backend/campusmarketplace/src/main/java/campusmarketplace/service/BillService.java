@@ -24,9 +24,9 @@ public class BillService {
      * Builds a PDF invoice for one order and returns it as raw bytes,
      * ready to be streamed to the browser as a download.
      */
-    public byte[] generateBill(Long orderId) {
+    public byte[] generateBill(Long orderId, String requesterEmail, boolean isAdmin) {
 
-        OrderDetailResponse order = orderService.getOrderDetail(orderId);
+        OrderDetailResponse order = orderService.getOrderDetail(orderId, requesterEmail, isAdmin);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Document doc = new Document(PageSize.A4, 40, 40, 50, 40);
@@ -56,20 +56,24 @@ public class BillService {
             doc.add(new Paragraph("Order ID: #" + order.getOrderId(), metaFont));
             doc.add(new Paragraph(
                     "Date: " + (order.getCreatedAt() != null
-                            ? order.getCreatedAt().format(fmt) : "-"), metaFont));
+                            ? order.getCreatedAt().format(fmt)
+                            : "-"),
+                    metaFont));
             doc.add(new Paragraph("Billed To: " + order.getUserEmail(), metaFont));
             doc.add(new Paragraph(
                     "Transaction ID: " + (order.getTransactionId() != null
-                            ? order.getTransactionId() : "-"), metaFont));
+                            ? order.getTransactionId()
+                            : "-"),
+                    metaFont));
 
             doc.add(Chunk.NEWLINE);
 
             // ---- Items table ----
-            PdfPTable table = new PdfPTable(new float[]{4, 1.2f, 1.5f, 1.5f});
+            PdfPTable table = new PdfPTable(new float[] { 4, 1.2f, 1.5f, 1.5f });
             table.setWidthPercentage(100);
 
             Font headFont = new Font(Font.HELVETICA, 11, Font.BOLD, Color.WHITE);
-            String[] headers = {"Item", "Qty", "Price", "Subtotal"};
+            String[] headers = { "Item", "Qty", "Price", "Subtotal" };
             for (String h : headers) {
                 PdfPCell cell = new PdfPCell(new Phrase(h, headFont));
                 cell.setBackgroundColor(indigo);
@@ -119,7 +123,8 @@ public class BillService {
         PdfPCell cell = new PdfPCell(new Phrase(text, font));
         cell.setPadding(7);
         cell.setBorderColor(new Color(220, 220, 220));
-        if (center) cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        if (center)
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         return cell;
     }
 

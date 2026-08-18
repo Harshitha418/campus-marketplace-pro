@@ -94,11 +94,10 @@ function Cart() {
 
         try {
 
-            // Step 1: ask our backend to create a Razorpay order for the cart total.
-            const orderRes = await api.post("/payment/create-order", null, {
-                params: { amount: total }
-            });
-
+                        // Step 1: ask our backend to create a Razorpay order. The backend
+            // computes the total itself from the authenticated user's cart —
+            // we no longer send an amount from the client.
+            const orderRes = await api.post("/payment/create-order");
             const { orderId, amount, currency, keyId } = orderRes.data;
 
             // Step 2: configure and open the Razorpay checkout popup.
