@@ -84,11 +84,13 @@ public class ProductController {
         }
 
         @GetMapping("/search")
-        public List<Product> searchProducts(
-                        @RequestParam String title) {
+        public Page<Product> searchProducts(
+                        @RequestParam String title,
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "10") int size) {
 
                 return productService
-                                .searchProducts(title);
+                                .searchProducts(title, page, size);
         }
 
         @GetMapping("/seller")
@@ -112,18 +114,20 @@ public class ProductController {
         }
 
         @GetMapping("/category/{category}")
-        public List<Product> getProductsByCategory(
-                        @PathVariable String category) {
+        public Page<Product> getProductsByCategory(
+                        @PathVariable String category,
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "10") int size) {
 
                 return productService
                                 .getProductsByCategory(
-                                                category);
+                                                category, page, size);
         }
 
-        @GetMapping("/recommended/{email}")
+        @GetMapping("/recommended")
         public List<RecommendationResponse> recommendedProducts(
-                        @PathVariable String email) {
-                logger.info("Recommendation API hit for user: {}", email);
-                return productService.getRecommendations(email);
+                        Authentication authentication) {
+                logger.info("Recommendation API hit for user: {}", authentication.getName());
+                return productService.getRecommendations(authentication.getName());
         }
 }

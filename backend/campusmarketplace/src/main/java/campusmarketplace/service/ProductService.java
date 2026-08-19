@@ -140,10 +140,10 @@ public class ProductService {
                 return "Product deleted successfully";
         }
 
-        public List<Product> searchProducts(String title) {
+        public Page<Product> searchProducts(String title, int page, int size) {
 
                 return productRepository
-                                .findByTitleContainingIgnoreCase(title);
+                                .findByTitleContainingIgnoreCase(title, PageRequest.of(page, size));
         }
 
         public List<Product> getSellerProducts(String email) {
@@ -161,9 +161,9 @@ public class ProductService {
                 return productRepository.findAllByOrderByPriceDesc();
         }
 
-        public List<Product> getProductsByCategory(String category) {
+        public Page<Product> getProductsByCategory(String category, int page, int size) {
 
-                return productRepository.findByCategoryIgnoreCase(category);
+                return productRepository.findByCategoryIgnoreCase(category, PageRequest.of(page, size));
         }
 
         public List<RecommendationResponse> getRecommendations(String email) {

@@ -2,6 +2,8 @@ package campusmarketplace.repository;
 
 import campusmarketplace.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,8 +12,8 @@ public interface ProductRepository
 
         long count();
 
-        List<Product> findByTitleContainingIgnoreCase(
-                        String title);
+        Page<Product> findByTitleContainingIgnoreCase(
+                        String title, Pageable pageable);
 
         List<Product> findBySellerEmail(
                         String sellerEmail);
@@ -20,8 +22,8 @@ public interface ProductRepository
 
         List<Product> findAllByOrderByPriceDesc();
 
-        List<Product> findByCategoryIgnoreCase(
-                        String category);
+        Page<Product> findByCategoryIgnoreCase(
+                        String category, Pageable pageable);
 
         List<Product> findByCategory(String category);
 }
